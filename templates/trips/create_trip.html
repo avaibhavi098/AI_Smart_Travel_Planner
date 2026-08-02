@@ -1,0 +1,602 @@
+{% extends "base.html" %}
+
+{% block title %}Create Trip{% endblock %}
+
+{% block content %}
+
+<style>
+
+.hero-card{
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0d6efd,#6f42c1);
+    color:#fff;
+}
+
+.hero-card .text-muted{
+    color:rgba(255,255,255,.85)!important;
+}
+
+.form-card{
+    border:0;
+    border-radius:22px;
+    box-shadow:0 1rem 2rem rgba(0,0,0,.08);
+}
+
+.field-card{
+    padding:18px;
+    border-radius:18px;
+    background:#fafafa;
+    margin-bottom:20px;
+    transition:.25s;
+}
+
+.field-card:hover{
+    background:#fff;
+    transform:translateY(-2px);
+}
+
+.form-control,
+.form-select,
+textarea{
+    width:100%;
+    border-radius:14px!important;
+    min-height:52px;
+}
+
+textarea{
+    min-height:140px!important;
+}
+
+.required{
+    color:red;
+}
+
+#sourceSuggestions{
+    z-index:9999;
+    max-height:250px;
+    overflow:auto;
+}
+
+.preference-box{
+    padding:15px;
+    border-radius:16px;
+    border:1px solid #dee2e6;
+    background:#fff;
+    cursor:pointer;
+    transition:.25s;
+    display:flex;
+    align-items:center;
+}
+
+.preference-box:hover{
+    border-color:#0d6efd;
+}
+
+.preference-box.selected{
+    background:#0d6efd;
+    color:#fff;
+    border-color:#0d6efd;
+}
+
+.preference-box input{
+    margin-right:8px;
+}
+
+.dark-mode .field-card{
+    background:#0f172a;
+}
+
+.dark-mode .preference-box{
+    background:#1e293b;
+    color:#fff;
+    border-color:#334155;
+}
+
+</style>
+
+
+<div class="container py-5">
+
+<div class="card hero-card shadow-lg mb-4">
+
+<div class="card-body p-5">
+
+<h2 class="fw-bold">
+✈️ Create Your Trip
+</h2>
+
+<p>
+Generate a personalized AI travel itinerary.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="card form-card">
+
+<div class="card-body p-5">
+
+<form method="POST" id="tripForm">
+
+{% csrf_token %}
+
+
+{% if form.errors %}
+
+<div class="alert alert-danger">
+
+<h6>Form Errors:</h6>
+
+{{ form.errors }}
+
+</div>
+
+{% endif %}
+
+
+
+<!-- SOURCE LOCATION -->
+
+<div class="field-card position-relative">
+
+<label class="form-label fw-bold">
+
+🏠 Starting Location
+
+<span class="required">*</span>
+
+</label>
+
+
+{{ form.source_city }}
+
+
+<div id="sourceSuggestions"
+class="list-group position-absolute w-100 shadow rounded-3 mt-1">
+
+</div>
+
+</div>
+
+
+
+
+<!-- HIDDEN SOURCE DATA -->
+
+<input type="hidden"
+id="id_source_state"
+name="source_state">
+
+
+<input type="hidden"
+id="id_source_country"
+name="source_country">
+
+
+<input type="hidden"
+id="id_source_latitude"
+name="source_latitude">
+
+
+<input type="hidden"
+id="id_source_longitude"
+name="source_longitude">
+
+
+
+
+
+<!-- OTHER FIELDS -->
+
+
+{% for field in form %}
+
+
+{% if field.name != "source_city" and field.name != "source_state" and field.name != "source_country" and field.name != "source_latitude" and field.name != "source_longitude" and field.name != "travel_style" and field.name != "food_preference" and field.name != "budget_priority" and field.name != "interests" %}
+
+
+<div class="field-card">
+
+
+<label class="form-label fw-bold">
+
+{{ field.label }}
+
+{% if field.field.required %}
+
+<span class="required">*</span>
+
+{% endif %}
+
+</label>
+
+
+{{ field }}
+
+
+
+{% if field.errors %}
+
+<div class="text-danger small">
+
+{{ field.errors }}
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+
+{% endif %}
+
+
+{% endfor %}
+<!-- PERSONALIZATION -->
+
+<div class="field-card">
+
+<h4 class="fw-bold mb-4">
+✨ Personalize Your Trip
+</h4>
+
+
+<!-- TRAVEL STYLE -->
+
+<label class="form-label fw-bold">
+🌍 Travel Style
+</label>
+
+<div class="row g-3 mb-4">
+
+{% for choice in form.travel_style %}
+
+<div class="col-md-4">
+
+<label class="preference-box"
+for="{{ choice.id_for_label }}">
+
+{{ choice.tag }}
+
+<span>
+{{ choice.choice_label }}
+</span>
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- FOOD PREFERENCE -->
+
+<label class="form-label fw-bold">
+🍴 Food Preference
+</label>
+
+<div class="row g-3 mb-4">
+
+{% for choice in form.food_preference %}
+
+<div class="col-md-3">
+
+<label class="preference-box"
+for="{{ choice.id_for_label }}">
+
+{{ choice.tag }}
+
+<span>
+{{ choice.choice_label }}
+</span>
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- BUDGET PRIORITY -->
+
+<label class="form-label fw-bold">
+💰 Budget Priority
+</label>
+
+<div class="row g-3 mb-4">
+
+{% for choice in form.budget_priority %}
+
+<div class="col-md-3">
+
+<label class="preference-box"
+for="{{ choice.id_for_label }}">
+
+{{ choice.tag }}
+
+<span>
+{{ choice.choice_label }}
+</span>
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+<!-- INTERESTS -->
+
+<label class="form-label fw-bold">
+❤️ Interests
+</label>
+
+<div class="row g-3">
+
+{% for checkbox in form.interests %}
+
+<div class="col-md-3">
+
+<label class="preference-box"
+for="{{ checkbox.id_for_label }}">
+
+{{ checkbox.tag }}
+
+<span>
+{{ checkbox.choice_label }}
+</span>
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+
+<hr class="my-4">
+
+
+<div class="d-flex justify-content-between gap-3">
+
+
+<a href="{% url 'trips:trip_list' %}"
+class="btn btn-outline-secondary btn-lg rounded-pill">
+
+<i class="bi bi-arrow-left"></i>
+Back
+
+</a>
+
+
+<button type="submit"
+class="btn btn-primary btn-lg rounded-pill px-5">
+
+<i class="bi bi-arrow-right"></i>
+Continue
+
+</button>
+
+
+</div>
+
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+// SOURCE LOCATION AUTOCOMPLETE
+
+const sourceInput =
+document.getElementById("id_source_city");
+
+const sourceSuggestions =
+document.getElementById("sourceSuggestions");
+
+const sourceState =
+document.getElementById("id_source_state");
+
+const sourceCountry =
+document.getElementById("id_source_country");
+
+const sourceLatitude =
+document.getElementById("id_source_latitude");
+
+const sourceLongitude =
+document.getElementById("id_source_longitude");
+
+
+if(sourceInput){
+
+sourceInput.addEventListener(
+"input",
+async function(){
+
+const query=this.value.trim();
+
+
+if(query.length < 2){
+
+sourceSuggestions.innerHTML="";
+return;
+
+}
+
+
+const response = await fetch(
+`/destinations/search/?q=${encodeURIComponent(query)}`
+);
+
+
+const places = await response.json();
+
+
+sourceSuggestions.innerHTML="";
+
+
+places.forEach(place=>{
+
+
+const item=document.createElement("button");
+
+item.type="button";
+
+item.className=
+"list-group-item list-group-item-action";
+
+
+item.innerHTML=`
+
+<i class="bi bi-geo-alt-fill text-success me-2"></i>
+
+${place.display_name}
+
+`;
+
+
+
+item.onclick=function(){
+
+sourceInput.value =
+place.city || place.display_name;
+
+
+sourceState.value =
+place.state || "";
+
+
+sourceCountry.value =
+place.country || "";
+
+
+sourceLatitude.value =
+place.latitude || "";
+
+
+sourceLongitude.value =
+place.longitude || "";
+
+
+sourceSuggestions.innerHTML="";
+
+};
+
+
+sourceSuggestions.appendChild(item);
+
+
+});
+
+
+});
+
+
+}
+
+
+
+// CLOSE DROPDOWN
+
+document.addEventListener(
+"click",
+function(e){
+
+if(
+sourceSuggestions &&
+!sourceSuggestions.contains(e.target)
+&&
+e.target !== sourceInput
+){
+
+sourceSuggestions.innerHTML="";
+
+}
+
+});
+
+
+
+// CARD HIGHLIGHT
+
+document
+.querySelectorAll(".preference-box input")
+.forEach(function(input){
+
+
+if(input.checked){
+
+input.closest(".preference-box")
+.classList.add("selected");
+
+}
+
+
+
+input.addEventListener(
+"change",
+function(){
+
+
+if(this.type==="radio"){
+
+
+document
+.querySelectorAll(
+'input[name="'+this.name+'"]'
+)
+.forEach(function(item){
+
+
+item.closest(".preference-box")
+.classList.remove("selected");
+
+
+});
+
+
+}
+
+
+
+this.closest(".preference-box")
+.classList.toggle(
+"selected",
+this.checked
+);
+
+
+});
+
+
+});
+
+</script>
+
+
+{% endblock %}

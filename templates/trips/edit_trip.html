@@ -1,0 +1,491 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Trip{% endblock %}
+
+{% block content %}
+
+<style>
+.hero-card{
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#ffc107,#ff9800);
+    color:#fff;
+}
+
+.form-card{
+    border:0;
+    border-radius:22px;
+    box-shadow:0 1rem 2rem rgba(0,0,0,.08);
+}
+
+.form-control,
+.form-select,
+textarea{
+    width:100%;
+    min-height:52px;
+    border-radius:14px!important;
+    border:1px solid #dee2e6;
+    transition:.25s;
+}
+
+textarea{
+    min-height:150px!important;
+    resize:vertical;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+    border-color:#ffc107;
+    box-shadow:0 0 0 .2rem rgba(255,193,7,.18);
+}
+
+.field-card{
+    padding:18px;
+    border-radius:16px;
+    background:#fafafa;
+    transition:.25s;
+    margin-bottom:20px;
+}
+
+.field-card:hover{
+    background:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 .5rem 1rem rgba(0,0,0,.06);
+}
+
+.required{
+    color:#dc3545;
+}
+
+.action-btn{
+    border-radius:50px;
+    padding:.8rem 1.6rem;
+}
+
+.save-spinner{
+    display:none;
+}
+
+
+/* RADIO + CHECKBOX FIX */
+
+input[type="radio"],
+input[type="checkbox"]{
+    width:auto!important;
+    min-height:auto!important;
+    margin-right:8px;
+}
+
+.form-check{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.form-check-input{
+    margin-top:0!important;
+}
+
+.form-check-label{
+    cursor:pointer;
+}
+
+
+/* DARK MODE */
+
+.dark-mode .form-card{
+    background:#1e293b!important;
+    color:#fff!important;
+    border:1px solid #334155;
+}
+
+.dark-mode .field-card{
+    background:#0f172a!important;
+    border:1px solid #334155;
+}
+
+.dark-mode .field-card:hover{
+    background:#1e293b!important;
+}
+
+.dark-mode .form-label{
+    color:#fff!important;
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea{
+    background:#111827!important;
+    color:#fff!important;
+    border:1px solid #475569!important;
+}
+
+.dark-mode .form-text{
+    color:#94a3b8!important;
+}
+
+
+@media(max-width:768px){
+
+.actions{
+    flex-direction:column;
+}
+
+.actions a,
+.actions button{
+    width:100%;
+}
+
+}
+
+.radio-group,
+.checkbox-group{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.form-check{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:0;
+}
+
+.form-check input{
+    width:18px!important;
+    height:18px!important;
+}
+
+.form-check-label{
+    color:inherit;
+    font-size:16px;
+}
+</style>
+
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-9">
+
+<div class="card hero-card shadow-lg mb-4">
+
+<div class="card-body p-5">
+
+<div class="row align-items-center">
+
+<div class="col-lg-8">
+
+<span class="badge bg-dark text-warning mb-3">
+Trip Editor
+</span>
+
+<h2 class="fw-bold mb-3">
+<i class="bi bi-pencil-square me-2"></i>
+Edit Trip
+</h2>
+
+<p class="mb-0">
+Update your trip information, travel dates, budget,
+transportation and planning details.
+</p>
+
+</div>
+
+<div class="col-lg-4 text-center d-none d-lg-block">
+
+<i class="bi bi-airplane-fill" style="font-size:90px;"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card form-card">
+
+<div class="card-body p-5">
+
+<form method="POST" novalidate id="tripForm">
+
+{% csrf_token %}
+
+
+{% if form.non_field_errors %}
+
+<div class="alert alert-danger rounded-4">
+{{ form.non_field_errors }}
+</div>
+
+{% endif %}
+
+
+{% for field in form %}
+
+<div class="field-card">
+
+<label class="form-label fw-bold">
+
+{{ field.label }}
+
+{% if field.field.required %}
+<span class="required">*</span>
+{% endif %}
+
+</label>
+
+
+{% if field.name == "travel_style" or field.name == "food_preference" or field.name == "budget_priority" %}
+
+<div class="radio-group">
+
+{% for radio in field %}
+
+<div class="form-check">
+
+{{ radio.tag }}
+
+<label class="form-check-label">
+
+{{ radio.choice_label }}
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+{% elif field.name == "interests" %}
+
+
+<div class="checkbox-group">
+
+{% for checkbox in field %}
+
+<div class="form-check">
+
+{{ checkbox.tag }}
+
+<label class="form-check-label">
+
+{{ checkbox.choice_label }}
+
+</label>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+{% else %}
+
+{{ field }}
+
+{% endif %}
+
+
+
+{% if field.errors %}
+
+<div class="text-danger small mt-2">
+
+{{ field.errors }}
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+{% endfor %}
+
+
+<hr class="my-4">
+
+
+<div class="d-flex justify-content-end gap-3 actions">
+
+<a href="{% url 'trips:trip_detail' trip.id %}"
+class="btn btn-outline-secondary action-btn">
+
+<i class="bi bi-arrow-left me-2"></i>
+Cancel
+
+</a>
+
+
+<button type="submit"
+class="btn btn-warning action-btn fw-semibold"
+id="saveBtn">
+
+<span class="save-text">
+
+<i class="bi bi-check-circle-fill me-2"></i>
+Update Trip
+
+</span>
+
+<span class="save-spinner">
+
+<span class="spinner-border spinner-border-sm me-2"></span>
+Saving Changes...
+
+</span>
+
+</button>
+
+
+</div>
+
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+const form = document.getElementById("tripForm");
+const saveBtn = document.getElementById("saveBtn");
+
+
+if(form && saveBtn){
+
+    form.addEventListener("submit", function(){
+
+        saveBtn.disabled = true;
+
+        const saveText = saveBtn.querySelector(".save-text");
+        const spinner = saveBtn.querySelector(".save-spinner");
+
+        if(saveText){
+            saveText.style.display = "none";
+        }
+
+        if(spinner){
+            spinner.style.display = "inline-block";
+        }
+
+    });
+
+}
+
+
+
+// Apply form-control only for normal inputs
+
+document.querySelectorAll("input,select,textarea")
+.forEach(function(el){
+
+
+    if(
+        el.type !== "radio" &&
+        el.type !== "checkbox"
+    ){
+
+        el.classList.add("form-control");
+
+    }
+
+
+
+    el.addEventListener("focus",function(){
+
+        const card = this.closest(".field-card");
+
+        if(card){
+            card.style.border="2px solid #ffc107";
+        }
+
+    });
+
+
+
+    el.addEventListener("blur",function(){
+
+        const card = this.closest(".field-card");
+
+        if(card){
+            card.style.border="none";
+        }
+
+    });
+
+
+});
+
+
+
+
+
+
+
+// Unsaved changes warning
+
+let formChanged=false;
+
+
+document.querySelectorAll("input,select,textarea")
+.forEach(function(el){
+
+    el.addEventListener("change",function(){
+
+        formChanged=true;
+
+    });
+
+});
+
+
+
+window.addEventListener(
+    "beforeunload",
+    function(e){
+
+        if(formChanged){
+
+            e.preventDefault();
+
+            e.returnValue="";
+
+        }
+
+    }
+);
+
+
+
+if(form){
+
+    form.addEventListener("submit",function(){
+
+        formChanged=false;
+
+    });
+
+}
+
+</script>
+
+
+{% endblock %}

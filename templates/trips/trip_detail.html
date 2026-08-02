@@ -1,0 +1,994 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trip.trip_name }}{% endblock %}
+
+{% block content %}
+
+
+<style>
+
+.hero-card{
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0d6efd,#6f42c1);
+    color:#fff;
+}
+
+.hero-card .text-muted{
+    color:rgba(255,255,255,.85)!important;
+}
+
+.stats-card{    
+    border:0;
+    border-radius:20px;
+    transition:.3s;
+    overflow:hidden;
+}
+
+.stats-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.12);
+}
+
+.stats-icon{
+    width:70px;
+    height:70px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+}
+
+.workspace-card{
+    border:0;
+    border-radius:22px;
+}
+
+.action-card{
+    border-radius:18px;
+    transition:.3s;
+    text-decoration:none;
+    display:block;
+}
+
+.action-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 .8rem 1.5rem rgba(0,0,0,.12);
+}
+
+.section-title{
+    font-weight:700;
+}
+
+/* ===========================
+   DARK MODE
+=========================== */
+
+.dark-mode .hero-card{
+    color:#ffffff;
+}
+
+.dark-mode .workspace-card,
+.dark-mode .stats-card,
+.dark-mode .action-card{
+    background:#1e293b !important;
+    color:#ffffff !important;
+    border:1px solid #334155;
+}
+
+.dark-mode .action-card:hover{
+    background:#273549 !important;
+}
+
+.dark-mode .stats-icon{
+    border:1px solid rgba(255,255,255,.15);
+}
+
+.dark-mode .section-title,
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6{
+    color:#ffffff !important;
+}
+
+.dark-mode p,
+.dark-mode span,
+.dark-mode small{
+    color:#cbd5e1;
+}
+
+.dark-mode .text-muted{
+    color:#94a3b8 !important;
+}
+
+.dark-mode hr{
+    border-color:#334155;
+}
+
+.dark-mode .list-group-item{
+    background:#1e293b !important;
+    color:#ffffff !important;
+    border-color:#334155;
+}
+
+.dark-mode .btn-outline-secondary{
+    color:#ffffff;
+    border-color:#64748b;
+}
+
+.dark-mode .btn-outline-secondary:hover{
+    background:#475569;
+    border-color:#475569;
+}
+
+@media(max-width:768px){
+
+.hero-buttons{
+
+    margin-top:20px;
+
+}
+
+.hero-buttons a{
+
+    width:100%;
+    margin-bottom:10px;
+
+}
+
+}
+
+</style>
+
+
+
+<div class="container-fluid py-4">
+
+<!-- Hero -->
+
+<div class="card hero-card shadow-lg mb-4">
+
+<div class="card-body p-5">
+
+<div class="row align-items-center">
+
+<div class="col-lg-8">
+
+<span class="badge bg-light text-primary fw-bold px-3 py-2 mb-3">
+
+{{ trip.status }}
+
+</span>
+
+<h1 class="fw-bold mb-3">
+
+{{ trip.trip_name }}
+
+</h1>
+
+<p class="text-muted mb-4">
+
+Manage destinations, optimize travel routes,
+generate AI itineraries and chat with your travel assistant
+from one unified dashboard.
+
+</p>
+
+<div class="d-flex flex-wrap gap-2">
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-calendar-event me-2"></i>
+
+{{ trip.start_date }}
+
+</span>
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-calendar-check me-2"></i>
+
+{{ trip.end_date }}
+
+</span>
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+<i class="bi bi-wallet2 me-2"></i>
+
+₹{{ trip.budget }}
+
+</span>
+
+</div>
+
+</div>
+
+<div class="col-lg-4 text-lg-end hero-buttons">
+
+<a href="{% url 'trips:edit_trip' trip.id %}"
+class="btn btn-light btn-lg me-2">
+
+<i class="bi bi-pencil-square me-2"></i>
+
+Edit Trip
+
+</a>
+
+<a href="{% url 'trips:trip_list' %}"
+class="btn btn-outline-light btn-lg">
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Back
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<!-- Starting Location -->
+
+{% if trip.source_city %}
+
+<div class="card shadow-sm border-0 rounded-4 mb-4">
+
+<div class="card-body">
+
+<div class="d-flex align-items-center">
+
+<div class="stats-icon bg-success-subtle text-success me-3">
+
+<i class="bi bi-house-fill"></i>
+
+</div>
+
+
+<div>
+
+<h5 class="fw-bold mb-1">
+
+Starting Point
+
+</h5>
+
+
+<p class="text-muted mb-0">
+
+{{ trip.source_city }},
+
+{{ trip.source_state }},
+
+{{ trip.source_country }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+<!-- Statistics -->
+
+<div class="row g-4 mb-4">
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-primary-subtle text-primary">
+
+<i class="bi bi-calendar-event"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+Start Date
+
+</h6>
+
+<p class="text-muted mb-0">
+
+{{ trip.start_date }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-success-subtle text-success">
+
+<i class="bi bi-calendar-check"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+End Date
+
+</h6>
+
+<p class="text-muted mb-0">
+
+{{ trip.end_date }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-warning-subtle text-warning">
+
+<i class="bi bi-wallet2"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+Budget
+
+</h6>
+
+<p class="text-muted mb-0">
+
+₹{{ trip.budget }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-info-subtle text-info">
+
+<i class="bi bi-people"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+Travelers
+
+</h6>
+
+<p class="text-muted mb-0">
+
+{{ trip.travelers }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-danger-subtle text-danger">
+
+<i class="bi bi-car-front"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+Transport
+
+</h6>
+
+<p class="text-muted mb-0">
+
+{{ trip.transport }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-2 col-md-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="stats-icon bg-primary-subtle text-primary">
+
+<i class="bi bi-geo-alt-fill"></i>
+
+</div>
+
+<h6 class="fw-bold mt-3">
+
+Stops
+
+</h6>
+
+<p class="text-muted mb-0">
+
+{{ destination_count }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Destination Summary -->
+
+<div class="card shadow-sm border-0 rounded-4">
+
+<div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+
+<div>
+
+<h4 class="section-title mb-1">
+
+<i class="bi bi-list-ol text-primary me-2"></i>
+
+Destination Summary
+
+</h4>
+
+<p class="text-muted mb-0">
+
+Overview of all planned stops.
+
+</p>
+
+</div>
+
+<span class="badge bg-primary px-3 py-2">
+
+{{ destination_count }} Stops
+
+</span>
+
+</div>
+
+<div class="card-body">
+
+{% if destinations %}
+
+<div class="list-group list-group-flush">
+
+    {% for destination in destinations %}
+
+<div class="list-group-item border-0 px-0 py-3">
+
+<div class="card border-0 shadow-sm rounded-4">
+
+<div class="card-body">
+
+<div class="row align-items-center">
+
+<div class="col-lg-1 text-center">
+
+<div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+style="width:55px;height:55px;">
+
+<strong>
+
+{{ destination.order }}
+
+</strong>
+
+</div>
+
+</div>
+
+<div class="col-lg-8">
+
+<h5 class="fw-bold mb-1">
+
+<i class="bi bi-geo-alt-fill text-danger me-2"></i>
+
+{{ destination.city }}
+
+</h5>
+
+<p class="text-muted mb-2">
+
+{{ destination.state }}, {{ destination.country }}
+
+</p>
+
+{% if destination.notes %}
+
+<div class="alert alert-light border rounded-3 mb-0">
+
+<i class="bi bi-chat-left-text text-primary me-2"></i>
+
+{{ destination.notes }}
+
+</div>
+
+{% endif %}
+
+</div>
+
+<div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+
+
+{% if destination.distance_from_previous %}
+
+<div class="badge bg-info text-dark px-3 py-2 mb-2">
+
+<i class="bi bi-signpost-2-fill me-2"></i>
+
+{{ destination.distance_from_previous }} km
+
+</div>
+
+<br>
+
+
+<div class="badge bg-warning text-dark px-3 py-2 mb-2">
+
+<i class="bi bi-clock-fill me-2"></i>
+
+{{ destination.travel_time_from_previous }}
+
+</div>
+
+<br>
+
+{% endif %}
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="text-center py-5">
+
+<div class="display-2 text-primary mb-3">
+
+<i class="bi bi-map"></i>
+
+</div>
+
+<h3 class="fw-bold">
+
+No Destinations Added
+
+</h3>
+
+<p class="text-muted mb-4">
+
+Start planning your journey by adding destinations.
+Once added, you can optimize routes and generate an AI itinerary.
+
+</p>
+
+<a
+href="{% url 'destinations:destination_list' trip.id %}"
+class="btn btn-primary btn-lg rounded-pill px-4">
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Add First Destination
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<!-- Trip Workspace -->
+
+<div class="card workspace-card shadow-sm mb-4">
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+
+<h4 class="section-title mb-1">
+
+<i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>
+
+Trip Workspace
+
+</h4>
+
+<p class="text-muted mb-0">
+
+Everything you need to plan and manage this trip.
+
+</p>
+
+</div>
+
+<span class="badge bg-primary px-3 py-2">
+
+{{ destination_count }} Destination{{ destination_count|pluralize }}
+
+</span>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<div class="row g-4">
+
+<div class="col-lg-4 col-md-6">
+
+<a
+href="{% url 'destinations:destination_list' trip.id %}"
+class="action-card">
+
+<div class="card border-0 bg-success text-white h-100">
+
+<div class="card-body text-center py-5">
+
+<div class="display-5 mb-3">
+
+<i class="bi bi-geo-alt-fill"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Manage Destinations
+
+</h4>
+
+<p class="mb-0 opacity-75">
+
+Add, edit, delete and reorder all destinations.
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-lg-4 col-md-6">
+
+<a
+href="{% url 'destinations:trip_map' trip.id %}"
+class="action-card">
+
+<div class="card border-0 bg-primary text-white h-100">
+
+<div class="card-body text-center py-5">
+
+<div class="display-5 mb-3">
+
+<i class="bi bi-map-fill"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Trip Map
+
+</h4>
+
+<p class="mb-0 opacity-75">
+
+View every destination plotted on an interactive map.
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-lg-4 col-md-6">
+
+<a
+href="{% url 'routes:route_map' trip.id %}"
+class="action-card">
+
+<div class="card border-0 bg-info text-white h-100">
+
+<div class="card-body text-center py-5">
+
+<div class="display-5 mb-3">
+
+<i class="bi bi-sign-turn-right-fill"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Optimize Route
+
+</h4>
+
+<p class="mb-0 opacity-75">
+
+Calculate the fastest and shortest travel path.
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-lg-6 col-md-6">
+
+<a
+href="{% url 'ai:generate_itinerary' trip.id %}"
+class="action-card">
+
+<div class="card border-0 bg-warning h-100">
+
+<div class="card-body text-center py-5">
+
+<div class="display-5 mb-3">
+
+<i class="bi bi-stars"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+Generate AI Itinerary
+
+</h4>
+
+<p class="mb-0">
+
+Create a complete day-by-day itinerary based on your
+saved destinations.
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-lg-6 col-md-6">
+
+<a
+href="{% url 'assistant_ai:chat_page' trip.id %}"
+class="action-card">
+
+<div class="card border-0 bg-dark text-white h-100">
+
+<div class="card-body text-center py-5">
+
+<div class="display-5 mb-3">
+
+<i class="bi bi-robot"></i>
+
+</div>
+
+<h4 class="fw-bold">
+
+AI Travel Assistant
+
+</h4>
+
+<p class="mb-0 opacity-75">
+
+Ask questions about your trip, destinations,
+budget or itinerary.
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Quick Insights -->
+
+<div class="row g-4 mt-2">
+
+<div class="col-lg-4">
+
+<div class="card border-0 shadow-sm rounded-4">
+
+<div class="card-body text-center">
+
+<div class="display-6 text-success">
+
+<i class="bi bi-currency-rupee"></i>
+
+</div>
+
+<h5 class="fw-bold mt-3">
+
+Budget
+
+</h5>
+
+<p class="text-muted mb-0">
+
+₹{{ trip.budget }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="card border-0 shadow-sm rounded-4">
+
+<div class="card-body text-center">
+
+<div class="display-6 text-warning">
+
+<i class="bi bi-signpost-split-fill"></i>
+
+</div>
+
+<h5 class="fw-bold mt-3">
+
+Destinations
+
+</h5>
+
+<p class="text-muted mb-0">
+
+{{ destination_count }} Planned Stops
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="card border-0 shadow-sm rounded-4">
+
+<div class="card-body text-center">
+
+<div class="display-6 text-primary">
+
+<i class="bi bi-stars"></i>
+
+</div>
+
+<h5 class="fw-bold mt-3">
+
+AI Ready
+
+</h5>
+
+<p class="text-muted mb-0">
+
+Generate an itinerary anytime.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
+
