@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Hero Section -->
+
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+
+        <div class="card-body p-5">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h2 class="fw-bold mb-2">
+
+                        Welcome back,
+                        {{ user.first_name|default:user.username }} 👋
+
+                    </h2>
+
+                    <p class="text-muted mb-4">
+
+                        Plan smarter, optimize your routes and generate AI-powered travel itineraries with ease.
+
+                    </p>
+
+                    <a href="{% url 'trips:create_trip' %}"
+                       class="btn btn-primary me-2">
+
+                        <i class="bi bi-plus-circle me-2"></i>
+
+                        Create New Trip
+
+                    </a>
+
+                    <a href="{% url 'trips:trip_list' %}"
+                       class="btn btn-outline-primary">
+
+                        <i class="bi bi-map me-2"></i>
+
+                        View Trips
+
+                    </a>
+
+                </div>
+
+                <div class="col-lg-4 text-center d-none d-lg-block">
+
+                    <i class="bi bi-airplane-engines text-primary"
+                       style="font-size:90px;"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+
+                                Total Trips
+
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+
+                                {{ total_trips|default:"0" }}
+
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-briefcase-fill fs-1 text-primary"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+
+                                Destinations
+
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+
+                                {{ total_destinations|default:"0" }}
+
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-geo-alt-fill fs-1 text-success"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+
+                                Distance
+
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+
+                                {{ total_distance|default:"0" }} km
+
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-sign-turn-right-fill fs-1 text-warning"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="card h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+
+                            <small class="text-muted">
+
+                                Upcoming Trips
+
+                            </small>
+
+                            <h2 class="fw-bold mt-2">
+
+                                {{ upcoming_trips|default:"0" }}
+
+                            </h2>
+
+                        </div>
+
+                        <i class="bi bi-calendar-event-fill fs-1 text-danger"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<!-- Quick Actions -->
+
+<div class="row g-4 mb-5">
+
+    <div class="col-lg-3 col-md-6">
+
+        <a href="{% url 'trips:create_trip' %}"
+           class="card text-decoration-none h-100 border-0 shadow-sm quick-card">
+
+            <div class="card-body text-center py-4">
+
+                <i class="bi bi-plus-circle-fill text-primary display-5 mb-3"></i>
+
+                <h5>Create Trip</h5>
+
+                <p class="text-muted mb-0">
+                    Start planning a new journey.
+                </p>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <a href="{% url 'trips:trip_list' %}"
+           class="card text-decoration-none h-100 border-0 shadow-sm quick-card">
+
+            <div class="card-body text-center py-4">
+
+                <i class="bi bi-map-fill text-success display-5 mb-3"></i>
+
+                <h5>My Trips</h5>
+
+                <p class="text-muted mb-0">
+                    Manage all your trips.
+                </p>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <a href="{% url 'profile' %}"
+           class="card text-decoration-none h-100 border-0 shadow-sm quick-card">
+
+            <div class="card-body text-center py-4">
+
+                <i class="bi bi-person-circle text-warning display-5 mb-3"></i>
+
+                <h5>Profile</h5>
+
+                <p class="text-muted mb-0">
+                    Update your account.
+                </p>
+
+            </div>
+
+        </a>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <a href="{% url 'logout' %}"
+           class="card text-decoration-none h-100 border-0 shadow-sm quick-card">
+
+            <div class="card-body text-center py-4">
+
+                <i class="bi bi-box-arrow-right text-danger display-5 mb-3"></i>
+
+                <h5>Logout</h5>
+
+                <p class="text-muted mb-0">
+                    Sign out securely.
+                </p>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+
+
+
+
+    <!-- Recent Trips -->
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-clock-history me-2"></i>
+
+                Recent Trips
+
+            </h5>
+
+            <a href="{% url 'trips:trip_list' %}"
+               class="btn btn-sm btn-outline-primary">
+
+                View All
+
+            </a>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if recent_trips %}
+
+                <div class="row g-4">
+
+                    {% for trip in recent_trips %}
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="card h-100 border-0 shadow-sm">
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">
+
+                                    {{ trip.trip_name }}
+
+                                </h5>
+
+                                <p class="text-muted mb-4">
+
+                                    <i class="bi bi-calendar-event me-2"></i>
+
+                                    {{ trip.start_date }}
+
+                                </p>
+
+                                <a href="{% url 'trips:trip_detail' trip.id %}"
+                                   class="btn btn-primary w-100">
+
+                                    Open Trip
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="text-center py-5">
+
+                    <i class="bi bi-map display-3 text-primary mb-3"></i>
+
+                    <h4>
+
+                        No Trips Yet
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Start planning your first AI-powered journey.
+
+                    </p>
+
+                    <a href="{% url 'trips:create_trip' %}"
+                       class="btn btn-primary">
+
+                        <i class="bi bi-plus-circle me-2"></i>
+
+                        Create Your First Trip
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
