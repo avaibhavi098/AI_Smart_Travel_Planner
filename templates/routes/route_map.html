@@ -1,0 +1,1008 @@
+{% extends "base.html" %}
+
+{% block title %}Optimized Route{% endblock %}
+
+{% block content %}
+
+<style>
+
+.hero-card{
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#198754,#0d6efd);
+    color:#fff;
+}
+
+.hero-card .text-muted{
+    color:rgba(255,255,255,.88)!important;
+}
+
+
+.stats-card{
+    border:0;
+    border-radius:20px;
+    transition:.3s;
+}
+
+
+.stats-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.12);
+}
+
+
+.stats-icon{
+
+    width:70px;
+    height:70px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+
+}
+
+
+.route-card{
+
+    border:0;
+    border-radius:22px;
+    overflow:hidden;
+
+}
+
+
+.section-title{
+
+    font-weight:700;
+
+}
+
+
+.action-btn{
+
+    border-radius:50px;
+
+}
+
+
+@media(max-width:768px){
+
+.hero-buttons{
+
+margin-top:20px;
+
+}
+
+.hero-buttons a{
+
+width:100%;
+margin-bottom:10px;
+
+}
+
+}
+
+</style>
+
+
+<div class="container-fluid py-4">
+
+
+<!-- HERO -->
+
+<div class="card hero-card shadow-lg mb-4">
+
+<div class="card-body p-5">
+
+<div class="row align-items-center">
+
+
+<div class="col-lg-8">
+
+
+<span class="badge bg-light text-success px-3 py-2 mb-3">
+
+<i class="bi bi-sign-turn-right-fill me-2"></i>
+
+Smart Route Optimization
+
+</span>
+
+
+<h1 class="fw-bold mb-3">
+
+{{ trip.trip_name }}
+
+</h1>
+
+
+<p class="text-muted mb-4">
+
+Analyze your optimized travel route, estimate total distance,
+review travel duration and visualize every stop before
+generating your AI itinerary.
+
+</p>
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-geo-alt-fill me-2"></i>
+
+{{ destinations|length }} Stops
+
+</span>
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-sign-turn-right-fill me-2"></i>
+
+{{ distance }} km
+
+</span>
+
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+<i class="bi bi-clock-history me-2"></i>
+
+{{ duration }} hrs
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+<div class="col-lg-4 text-lg-end hero-buttons">
+
+
+<a href="{% url 'destinations:destination_list' trip.id %}"
+class="btn btn-light btn-lg me-2">
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Destinations
+
+</a>
+
+
+<a href="{% url 'ai:generate_itinerary' trip.id %}"
+class="btn btn-outline-light btn-lg">
+
+<i class="bi bi-stars me-2"></i>
+
+AI Itinerary
+
+</a>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- STATISTICS -->
+
+
+<div class="row g-4 mb-4">
+
+
+<div class="col-lg-4">
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-primary-subtle text-primary">
+
+<i class="bi bi-geo-alt-fill"></i>
+
+</div>
+
+
+<h3 class="fw-bold mt-3">
+
+{{ destinations|length }}
+
+</h3>
+
+
+<p class="text-muted mb-0">
+
+Total Stops
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-lg-4">
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-success-subtle text-success">
+
+<i class="bi bi-sign-turn-right-fill"></i>
+
+</div>
+
+
+<h3 class="fw-bold mt-3">
+
+{{ distance }} km
+
+</h3>
+
+
+<p class="text-muted mb-0">
+
+Optimized Distance
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-lg-4">
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-warning-subtle text-warning">
+
+<i class="bi bi-clock-history"></i>
+
+</div>
+
+
+<h3 class="fw-bold mt-3">
+
+{{ duration }} hrs
+
+</h3>
+
+
+<p class="text-muted mb-0">
+
+Estimated Duration
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="row g-4">
+
+
+
+<!-- ROUTE TIMELINE -->
+
+
+<div class="col-lg-4">
+
+
+<div class="card route-card shadow-sm h-100">
+
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+
+<h4 class="section-title mb-1">
+
+<i class="bi bi-signpost-split-fill text-success me-2"></i>
+
+Optimized Route
+
+</h4>
+
+
+<p class="text-muted mb-0">
+
+Follow the recommended travel sequence.
+
+</p>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+{% for destination in destinations %}
+
+
+<div class="d-flex mb-4">
+
+
+<div class="text-center me-3">
+
+
+<div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+
+style="width:48px;height:48px;">
+
+
+{{ forloop.counter }}
+
+
+</div>
+
+
+
+{% if not forloop.last %}
+
+
+<div class="mx-auto bg-primary opacity-25"
+
+style="width:3px;height:55px;"></div>
+
+
+{% endif %}
+
+
+</div>
+
+
+<div class="flex-grow-1">
+
+
+<div class="card border-0 bg-light rounded-4">
+
+
+<div class="card-body">
+
+
+<div class="d-flex justify-content-between align-items-start">
+
+
+<div>
+
+
+<h5 class="fw-bold mb-1">
+
+
+{% if destination.is_source %}
+
+<i class="bi bi-house-fill text-success me-2"></i>
+
+{{ destination.city }}
+
+<span class="badge bg-success ms-2">
+
+Starting Point
+
+</span>
+
+
+{% else %}
+
+
+<i class="bi bi-geo-alt-fill text-danger me-2"></i>
+
+{{ destination.city }}
+
+
+{% endif %}
+
+
+</h5>
+
+
+<p class="text-muted mb-2">
+
+{{ destination.state }}, {{ destination.country }}
+
+</p>
+
+
+</div>
+
+
+{% if destination.is_source %}
+
+<span class="badge bg-success rounded-pill">
+
+Start
+
+</span>
+
+{% else %}
+
+<span class="badge bg-primary rounded-pill">
+
+Stop {{ forloop.counter }}
+
+</span>
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+{% empty %}
+
+
+<div class="text-center py-5">
+
+<div class="display-4 text-muted mb-3">
+
+<i class="bi bi-map"></i>
+
+</div>
+
+
+<h5 class="fw-bold">
+
+No Destinations Found
+
+</h5>
+
+
+<p class="text-muted mb-0">
+
+Add destinations to generate an optimized travel route.
+
+</p>
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- MAP SECTION -->
+
+
+<div class="col-lg-8">
+
+
+<div class="card route-card shadow-sm">
+
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+
+<div>
+
+
+<h4 class="section-title mb-1">
+
+<i class="bi bi-map-fill text-primary me-2"></i>
+
+Interactive Route Map
+
+</h4>
+
+
+<p class="text-muted mb-0">
+
+Explore every destination connected by the optimized route.
+
+</p>
+
+
+</div>
+
+
+<span class="badge bg-success px-3 py-2">
+
+{{ destinations|length }} Stops
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="card-body p-0">
+
+
+<div id="map"
+style="height:700px;border-radius:0 0 22px 22px;"></div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+const map = L.map("map",{
+
+zoomControl:true,
+scrollWheelZoom:true
+
+});
+
+
+
+L.tileLayer(
+
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+{
+
+maxZoom:19,
+
+attribution:"© OpenStreetMap contributors"
+
+}
+
+).addTo(map);
+
+
+
+const bounds=[];
+
+const routeCoordinates=[];
+
+
+
+{% for destination in destinations %}
+
+
+
+{% if destination.latitude and destination.longitude %}
+
+
+
+{% if destination.is_source %}
+
+
+const marker{{ forloop.counter }} = L.marker(
+
+[
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+],
+
+{
+
+icon:L.divIcon({
+
+className:"source-marker",
+
+html:`
+
+<div style="
+
+background:#198754;
+
+color:white;
+
+width:42px;
+
+height:42px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:22px;
+
+border:3px solid white;
+
+box-shadow:0 3px 10px rgba(0,0,0,.3);
+
+">
+
+🏠
+
+</div>
+
+`,
+
+iconSize:[42,42]
+
+})
+
+}
+
+).addTo(map);
+
+
+
+{% else %}
+
+
+
+const marker{{ forloop.counter }} = L.marker([
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+]).addTo(map);
+
+
+
+{% endif %}
+
+
+
+marker{{ forloop.counter }}.bindPopup(`
+
+
+<div style="min-width:190px;">
+
+
+<h6 class="fw-bold mb-2">
+
+
+{% if destination.is_source %}
+
+
+🏠 Starting Point
+
+
+{% else %}
+
+
+📍 Stop {{ forloop.counter }}
+
+
+{% endif %}
+
+
+</h6>
+
+
+
+<strong>
+
+{{ destination.city|escapejs }}
+
+</strong>
+
+
+<br>
+
+
+{{ destination.state|escapejs }}
+
+
+<br>
+
+
+{{ destination.country|escapejs }}
+
+
+
+</div>
+
+
+`);
+
+
+
+bounds.push([
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+]);
+
+
+
+{% endif %}
+
+
+
+{% endfor %}
+
+
+
+
+
+if(bounds.length){
+
+
+map.fitBounds(bounds,{
+
+padding:[60,60]
+
+});
+
+
+}else{
+
+
+map.setView(
+
+[20.5937,78.9629],
+
+5
+
+);
+
+
+}
+
+
+
+
+
+{% for point in geometry.coordinates %}
+
+
+routeCoordinates.push([
+
+{{ point.1 }},
+
+{{ point.0 }}
+
+]);
+
+
+{% endfor %}
+
+
+
+if(routeCoordinates.length){
+
+
+L.polyline(
+
+routeCoordinates,
+
+{
+
+color:"#0d6efd",
+
+weight:6,
+
+opacity:.9,
+
+lineJoin:"round"
+
+}
+
+).addTo(map);
+
+
+}
+
+
+
+
+
+setTimeout(function(){
+
+
+map.invalidateSize();
+
+
+},300);
+
+
+
+</script>
+
+
+
+<style>
+
+
+#map{
+
+min-height:700px;
+
+}
+
+
+
+.leaflet-popup-content{
+
+font-size:15px;
+
+}
+
+
+
+.source-marker{
+
+background:none;
+
+border:none;
+
+}
+
+
+
+.hero-card{
+
+animation:fadeUp .4s ease;
+
+}
+
+
+
+.stats-card{
+
+animation:fadeUp .7s ease;
+
+}
+
+
+
+.route-card{
+
+animation:fadeUp .9s ease;
+
+}
+
+
+
+@keyframes fadeUp{
+
+
+from{
+
+opacity:0;
+
+transform:translateY(25px);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+
+}
+
+
+
+@media(max-width:992px){
+
+
+#map{
+
+height:500px!important;
+
+}
+
+
+}
+
+
+
+@media(max-width:768px){
+
+
+#map{
+
+height:400px!important;
+
+}
+
+
+.hero-card .card-body{
+
+padding:2rem!important;
+
+}
+
+
+}
+
+
+</style>
+
+
+
+{% endblock %}
+
