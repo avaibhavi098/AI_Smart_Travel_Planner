@@ -1,0 +1,1244 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Map{% endblock %}
+
+{% block content %}
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+
+<style>
+
+.hero-card{
+
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0d6efd,#6f42c1);
+    color:#fff;
+
+}
+
+
+.hero-card .text-muted{
+
+    color:rgba(255,255,255,.88)!important;
+
+}
+
+
+
+.stats-card{
+
+    border:0;
+    border-radius:20px;
+    transition:.3s;
+
+}
+
+
+.stats-card:hover{
+
+    transform:translateY(-6px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.12);
+
+}
+
+
+
+.stats-icon{
+
+    width:70px;
+    height:70px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    font-size:30px;
+
+}
+
+
+
+.sidebar-card,
+.map-card{
+
+    border:0;
+    border-radius:22px;
+    overflow:hidden;
+
+}
+
+
+
+.section-title{
+
+    font-weight:700;
+
+}
+
+
+
+.action-btn{
+
+    border-radius:50px;
+
+}
+
+
+
+@media(max-width:992px){
+
+
+.hero-buttons{
+
+    margin-top:20px;
+
+}
+
+
+.hero-buttons a{
+
+    width:100%;
+    margin-bottom:10px;
+
+}
+
+
+}
+
+
+</style>
+
+<style>
+
+
+#map{
+
+    min-height:720px;
+
+}
+
+
+
+.leaflet-popup-content{
+
+    font-size:15px;
+
+}
+
+
+
+.hero-card{
+
+    animation:fadeUp .4s ease;
+
+}
+
+
+
+.stats-card{
+
+    animation:fadeUp .6s ease;
+
+}
+
+
+
+.sidebar-card{
+
+    animation:fadeUp .8s ease;
+
+}
+
+
+
+.map-card{
+
+    animation:fadeUp 1s ease;
+
+}
+
+
+
+
+@keyframes fadeUp{
+
+
+from{
+
+
+    opacity:0;
+
+    transform:translateY(25px);
+
+
+}
+
+
+to{
+
+
+    opacity:1;
+
+    transform:translateY(0);
+
+
+}
+
+
+}
+
+
+
+
+@media(max-width:992px){
+
+
+#map{
+
+
+    height:550px!important;
+
+
+}
+
+
+}
+
+
+
+
+@media(max-width:768px){
+
+
+
+.hero-card .card-body{
+
+
+    padding:2rem!important;
+
+
+}
+
+
+
+#map{
+
+
+    height:420px!important;
+
+
+}
+
+
+
+.sidebar-card{
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+}
+
+
+
+</style>
+
+
+
+<div class="container-fluid py-4">
+
+
+
+<!-- HERO SECTION -->
+
+
+<div class="card hero-card shadow-lg mb-4">
+
+
+<div class="card-body p-5">
+
+
+<div class="row align-items-center">
+
+
+
+<div class="col-lg-8">
+
+
+
+<span class="badge bg-light text-primary px-3 py-2 mb-3">
+
+
+<i class="bi bi-map-fill me-2"></i>
+
+Interactive Trip Map
+
+
+</span>
+
+
+
+
+<h1 class="fw-bold mb-3">
+
+
+{{ trip.trip_name }}
+
+
+</h1>
+
+
+
+
+<p class="text-muted mb-4">
+
+
+Visualize every destination on an interactive map,
+review your complete travel plan and easily navigate
+between all planned stops.
+
+
+</p>
+
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+
+<i class="bi bi-geo-alt-fill me-2"></i>
+
+
+{{ destinations|length }} Destinations
+
+
+</span>
+
+
+
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+
+<i class="bi bi-map me-2"></i>
+
+
+Live Map
+
+
+</span>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-4 text-lg-end hero-buttons">
+
+
+<a
+href="{% url 'destinations:destination_list' trip.id %}"
+class="btn btn-light btn-lg me-2">
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+Destinations
+
+
+</a>
+
+
+
+<a
+href="{% url 'routes:route_map' trip.id %}"
+class="btn btn-outline-light btn-lg">
+
+
+<i class="bi bi-sign-turn-right-fill me-2"></i>
+
+
+Optimized Route
+
+
+</a>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- STATISTICS SECTION -->
+
+
+<div class="row g-4 mb-4">
+
+
+
+<div class="col-lg-4">
+
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-primary-subtle text-primary">
+
+
+<i class="bi bi-geo-alt-fill"></i>
+
+
+</div>
+
+
+
+
+<h3 class="fw-bold mt-3">
+
+
+{{ destinations|length }}
+
+
+</h3>
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Total Destinations
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-4">
+
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-success-subtle text-success">
+
+
+<i class="bi bi-map"></i>
+
+
+</div>
+
+
+
+
+<h3 class="fw-bold mt-3">
+
+
+100%
+
+
+</h3>
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Mapped Locations
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="col-lg-4">
+
+
+
+<div class="card stats-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="stats-icon bg-warning-subtle text-warning">
+
+
+<i class="bi bi-pin-map-fill"></i>
+
+
+</div>
+
+
+
+
+<h3 class="fw-bold mt-3">
+
+
+Ready
+
+
+</h3>
+
+
+
+
+<p class="text-muted mb-0">
+
+
+Trip Planning
+
+
+</p>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+<!-- DESTINATION TIMELINE + MAP -->
+
+<div class="row g-4">
+
+
+<!-- Destination Timeline -->
+
+<div class="col-lg-4">
+
+
+<div class="card sidebar-card shadow-sm h-100">
+
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<div>
+
+
+<h4 class="section-title mb-1">
+
+<i class="bi bi-geo-alt-fill text-primary me-2"></i>
+
+Travel Plan
+
+</h4>
+
+
+<p class="text-muted mb-0">
+
+Destination timeline
+
+</p>
+
+
+</div>
+
+
+<span class="badge bg-primary px-3 py-2">
+
+{{ destinations|length }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="card-body">
+
+
+{% for destination in destinations %}
+
+
+<div class="d-flex mb-4">
+
+
+<div class="text-center me-3">
+
+
+<div
+class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center"
+
+style="width:48px;height:48px;">
+
+
+{{ destination.order }}
+
+
+</div>
+
+
+
+{% if not forloop.last %}
+
+<div
+class="bg-primary opacity-25 mx-auto"
+
+style="width:3px;height:60px;">
+
+</div>
+
+{% endif %}
+
+
+
+</div>
+
+
+
+<div class="flex-grow-1">
+
+
+<div class="card border-0 bg-light rounded-4">
+
+
+<div class="card-body">
+
+
+
+<h5 class="fw-bold mb-1">
+
+
+<i class="bi bi-pin-map-fill text-danger me-2"></i>
+
+
+{{ destination.city }}
+
+
+</h5>
+
+
+
+
+<p class="text-muted mb-2">
+
+
+{{ destination.state }},
+{{ destination.country }}
+
+
+</p>
+
+
+
+{% if destination.notes %}
+
+<div class="small text-muted">
+
+
+<i class="bi bi-chat-left-text me-1"></i>
+
+
+{{ destination.notes }}
+
+
+</div>
+
+{% endif %}
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+{% empty %}
+
+
+<div class="text-center py-5">
+
+
+<div class="display-4 text-muted mb-3">
+
+
+<i class="bi bi-map"></i>
+
+
+</div>
+
+
+
+<h5 class="fw-bold">
+
+No Destinations
+
+</h5>
+
+
+
+<p class="text-muted mb-4">
+
+Add destinations to display them on the map.
+
+</p>
+
+
+
+<a
+href="{% url 'add_destination' trip.id %}"
+class="btn btn-primary rounded-pill">
+
+
+<i class="bi bi-plus-circle me-2"></i>
+
+
+Manage Destinations
+
+
+</a>
+
+
+
+</div>
+
+
+{% endfor %}
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- MAP SECTION -->
+
+
+<div class="col-lg-8">
+
+
+<div class="card map-card shadow-sm">
+
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+
+<div>
+
+
+<h4 class="section-title mb-1">
+
+
+<i class="bi bi-map-fill text-success me-2"></i>
+
+
+Interactive Map
+
+
+</h4>
+
+
+
+<p class="text-muted mb-0">
+
+
+Explore every destination with live map markers.
+
+
+</p>
+
+
+</div>
+
+
+
+<span class="badge bg-success px-3 py-2">
+
+
+Live View
+
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card-body p-0">
+
+
+<div
+id="map"
+style="height:720px;width:100%;border-radius:0 0 22px 22px;">
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+
+<script type="text/javascript">
+
+const map = L.map("map", {
+
+    zoomControl:true,
+    scrollWheelZoom:true
+
+});
+
+
+L.tileLayer(
+
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+{
+
+    maxZoom:19,
+
+    attribution:"© OpenStreetMap contributors"
+
+}
+
+).addTo(map);
+
+
+
+const bounds = [];
+
+const routePoints = [];
+
+
+
+/*
+    SOURCE LOCATION
+    Start Point
+*/
+
+{% if trip.source_latitude and trip.source_longitude %}
+
+
+const sourcePoint = [
+
+    {{ trip.source_latitude }},
+    {{ trip.source_longitude }}
+
+];
+
+
+const sourceMarker = L.marker(
+
+    sourcePoint,
+
+    {
+
+        icon:L.divIcon({
+
+            className:"source-marker",
+
+            html:`
+
+            <div style="
+
+            background:#198754;
+
+            color:white;
+
+            width:45px;
+
+            height:45px;
+
+            border-radius:50%;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:22px;
+
+            border:3px solid white;
+
+            box-shadow:0 3px 10px rgba(0,0,0,.3);
+
+            ">
+
+            🏠
+
+            </div>
+
+            `,
+
+            iconSize:[45,45]
+
+        })
+
+    }
+
+).addTo(map);
+
+
+
+sourceMarker.bindPopup(`
+
+<div style="min-width:180px;">
+
+
+<h6 class="fw-bold">
+
+🏠 Starting Point
+
+</h6>
+
+
+<strong>
+
+{{ trip.source_city|escapejs }}
+
+</strong>
+
+
+<br>
+
+
+{{ trip.source_state|escapejs }}
+
+
+<br>
+
+
+{{ trip.source_country|escapejs }}
+
+
+</div>
+
+`);
+
+
+
+bounds.push(sourcePoint);
+
+
+routePoints.push(sourcePoint);
+
+
+
+{% endif %}
+
+
+
+
+
+
+/*
+    DESTINATIONS
+*/
+
+
+{% for destination in destinations %}
+
+
+{% if destination.latitude and destination.longitude %}
+
+
+
+const marker{{ forloop.counter }} = L.marker([
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+]).addTo(map);
+
+
+
+marker{{ forloop.counter }}.bindPopup(`
+
+<div style="min-width:180px;">
+
+
+<h6 class="fw-bold">
+
+📍 {{ destination.order }}. {{ destination.city|escapejs }}
+
+</h6>
+
+
+<p class="mb-1">
+
+{{ destination.state|escapejs }}
+
+</p>
+
+
+<p class="mb-0">
+
+{{ destination.country|escapejs }}
+
+</p>
+
+
+</div>
+
+`);
+
+
+
+bounds.push([
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+]);
+
+
+
+routePoints.push([
+
+{{ destination.latitude }},
+
+{{ destination.longitude }}
+
+]);
+
+
+
+{% endif %}
+
+
+{% endfor %}
+
+
+
+
+
+
+/*
+    RETURN JOURNEY TO SOURCE
+*/
+
+
+{% if trip.source_latitude and trip.source_longitude %}
+
+
+routePoints.push([
+
+{{ trip.source_latitude }},
+
+{{ trip.source_longitude }}
+
+]);
+
+
+{% endif %}
+
+
+
+
+
+
+
+if(bounds.length){
+
+
+    map.fitBounds(bounds,{
+
+        padding:[60,60]
+
+    });
+
+
+}
+
+else{
+
+
+    map.setView(
+
+        [20.5937,78.9629],
+
+        5
+
+    );
+
+
+}
+
+
+
+
+
+
+
+/*
+    COMPLETE ROUND TRIP LINE
+*/
+
+
+if(routePoints.length > 1){
+
+
+    L.polyline(
+
+        routePoints,
+
+        {
+
+            weight:6,
+
+            opacity:.9,
+
+            color:"#0d6efd",
+
+            lineJoin:"round"
+
+        }
+
+    ).addTo(map);
+
+
+}
+
+
+
+
+
+
+setTimeout(function(){
+
+
+    map.invalidateSize();
+
+
+},300);
+
+
+
+</script>
+
+
+
+{% endblock %}
+
+
