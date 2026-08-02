@@ -1,0 +1,948 @@
+/* ==========================================
+   AI Smart Travel Planner
+   Global Theme
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+:root{
+
+    --primary:#2563EB;
+    --primary-dark:#1D4ED8;
+
+    --success:#10B981;
+    --danger:#EF4444;
+    --warning:#F59E0B;
+
+    --dark:#1E293B;
+    --gray:#64748B;
+    --border:#E2E8F0;
+
+    --background:#F8FAFC;
+    --card:#FFFFFF;
+
+}
+
+
+/* ===========================
+   Global
+=========================== */
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:var(--background);
+
+    color:var(--dark);
+
+    min-height:100vh;
+
+}
+
+
+
+/* ===========================
+   Navbar
+=========================== */
+
+
+.navbar{
+
+    background:#ffffff !important;
+
+    border-bottom:1px solid #e9ecef;
+
+    box-shadow:0 5px 18px rgba(15,23,42,.08);
+
+    min-height:72px;
+
+    padding:14px 0;
+
+    z-index:1050;
+
+}
+
+
+
+.navbar-brand{
+
+    font-size:1.25rem;
+
+    font-weight:700;
+
+    color:#212529 !important;
+
+}
+
+
+
+.nav-link{
+
+    color:#495057 !important;
+
+    font-weight:500;
+
+    margin-left:15px;
+
+    transition:.25s;
+
+}
+
+
+
+.nav-link:hover{
+
+    color:#2563eb !important;
+
+}
+
+
+
+.nav-link.active{
+
+    color:#2563eb !important;
+
+}
+
+
+
+.navbar-toggler{
+
+    box-shadow:none !important;
+
+}
+
+
+
+/* ===========================
+   Cards
+=========================== */
+
+
+.card{
+
+    border:none;
+
+    border-radius:18px;
+
+    background:#ffffff;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.06);
+
+    transition:.3s;
+
+}
+
+
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 35px rgba(15,23,42,.10);
+
+}
+
+
+
+.card-header{
+
+    background:white;
+
+    border:none;
+
+    font-weight:600;
+
+    font-size:18px;
+
+}
+
+
+
+/* ===========================
+   Buttons
+=========================== */
+
+
+.btn{
+
+    border-radius:12px;
+
+    padding:10px 24px;
+
+    font-weight:600;
+
+}
+
+
+
+.btn-primary{
+
+    background:var(--primary);
+
+    border:none;
+
+}
+
+
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+
+}
+
+
+
+.btn-success,
+.btn-danger,
+.btn-secondary{
+
+    border:none;
+
+}
+
+
+
+/* ===========================
+   Forms
+=========================== */
+
+
+.form-control,
+.form-select{
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    padding:12px 15px;
+
+    box-shadow:none;
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 0 .15rem rgba(37,99,235,.18);
+
+}
+
+
+
+/* ===========================
+   Tables
+=========================== */
+
+
+.table{
+
+    background:white;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+}
+
+
+
+.table thead{
+
+    background:#EFF6FF;
+
+}
+
+
+
+.table th{
+
+    font-weight:600;
+
+}
+
+
+
+/* ===========================
+   Alerts
+=========================== */
+
+
+.alert{
+
+    border:none;
+
+    border-radius:12px;
+
+}
+
+
+
+/* ===========================
+   Titles
+=========================== */
+
+
+.page-title{
+
+    font-size:30px;
+
+    font-weight:700;
+
+}
+
+
+
+.page-subtitle{
+
+    color:var(--gray);
+
+}
+
+
+
+/* ===========================
+   Badge
+=========================== */
+
+
+.badge{
+
+    border-radius:30px;
+
+    padding:8px 14px;
+
+}
+
+
+
+/* ===========================
+   Footer
+=========================== */
+
+
+footer,
+.footer{
+
+    margin-top:80px;
+
+    background:white;
+
+    border-top:1px solid var(--border);
+
+    padding:25px;
+
+    color:var(--gray);
+
+}
+
+
+
+.footer h4,
+.footer h6{
+
+    color:#212529;
+
+}
+
+
+
+.footer a{
+
+    color:#6c757d;
+
+    text-decoration:none;
+
+    transition:.25s;
+
+}
+
+
+
+.footer a:hover{
+
+    color:#2563eb;
+
+}
+
+
+
+/* ===========================
+   Utilities
+=========================== */
+
+
+.shadow-soft{
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+.rounded-xl{
+
+    border-radius:20px;
+
+}
+
+
+
+.section{
+
+    margin-top:40px;
+
+    margin-bottom:40px;
+
+}
+
+
+
+/* ===========================
+   Quick Cards
+=========================== */
+
+
+.quick-card{
+
+    transition:.25s ease;
+
+    border-radius:18px;
+
+}
+
+
+
+.quick-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 15px 35px rgba(37,99,235,.15)!important;
+
+}
+
+
+
+.quick-card h5{
+
+    color:#212529;
+
+    font-weight:600;
+
+}
+
+
+
+/* ===========================
+   Destination Drag
+=========================== */
+
+
+.destination-card{
+
+    transition:.25s ease;
+
+    cursor:grab;
+
+}
+
+
+
+.destination-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.drag-handle{
+
+    cursor:grab;
+
+    color:#64748b;
+
+    font-size:20px;
+
+}
+
+
+
+.dragging{
+
+    opacity:.85;
+
+    transform:rotate(2deg);
+
+}
+
+
+
+.drag-ghost{
+
+    background:#dbeafe!important;
+
+    border:2px dashed #2563eb!important;
+
+}
+
+
+
+.drag-chosen{
+
+    box-shadow:0 18px 40px rgba(37,99,235,.2);
+
+}
+
+
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+
+.dark-mode{
+
+    background:#0f172a;
+
+    color:#e5e7eb;
+
+}
+
+
+
+/* Navbar */
+
+
+.dark-mode .navbar{
+
+    background:#111827 !important;
+
+    border-color:#334155;
+
+}
+
+
+
+.dark-mode .navbar-brand{
+
+    color:#ffffff !important;
+
+}
+
+
+
+.dark-mode .nav-link{
+
+    color:#e5e7eb !important;
+
+}
+
+
+
+.dark-mode .nav-link:hover{
+
+    color:#60a5fa !important;
+
+}
+
+
+
+.dark-mode .nav-link.active{
+
+    color:#60a5fa !important;
+
+}
+
+
+
+/* Cards */
+
+
+.dark-mode .card{
+
+    background:#1e293b !important;
+
+    color:#f1f5f9 !important;
+
+    border:1px solid #334155;
+
+}
+
+
+
+.dark-mode .card-header{
+
+    background:#1e293b !important;
+
+    color:#ffffff;
+
+    border-bottom:1px solid #334155;
+
+}
+
+
+
+/* Forms */
+
+
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea{
+
+    background:#111827;
+
+    color:#ffffff;
+
+    border-color:#374151;
+
+}
+
+
+
+.dark-mode .form-control:focus,
+.dark-mode .form-select:focus,
+.dark-mode textarea:focus{
+
+    background:#111827;
+
+    color:#ffffff;
+
+}
+
+
+
+/* Tables */
+
+
+.dark-mode .table{
+
+    color:#f1f5f9;
+
+}
+
+
+
+/* Text */
+
+
+.dark-mode .text-muted{
+
+    color:#94a3b8 !important;
+
+}
+
+
+
+/* Footer */
+
+
+.dark-mode footer,
+.dark-mode .footer{
+
+    background:#111827;
+
+    border-color:#374151;
+
+    color:#cbd5e1;
+
+}
+
+
+
+.dark-mode .footer h4,
+.dark-mode .footer h6{
+
+    color:#ffffff;
+
+}
+
+
+
+.dark-mode .footer a{
+
+    color:#cbd5e1;
+
+}
+
+
+
+.dark-mode .footer a:hover{
+
+    color:#60a5fa;
+
+}
+
+
+
+/* Quick cards */
+
+
+.dark-mode .quick-card{
+
+    background:#1e293b;
+
+}
+
+
+
+.dark-mode .quick-card h5{
+
+    color:#ffffff;
+
+}
+
+
+
+/* Buttons */
+
+
+.dark-mode .btn-outline-secondary{
+
+    color:#ffffff;
+
+    border-color:#64748b;
+
+}
+
+
+
+.dark-mode .btn-outline-secondary:hover{
+
+    background:#475569;
+
+}
+
+
+
+
+/* Navbar Brand Theme */
+
+.navbar-brand{
+    color:#212529 !important;
+}
+
+
+.dark-mode .navbar-brand{
+
+    color:#ffffff !important;
+
+}
+
+
+/* ===============================
+   Form Cards Theme Fix
+================================ */
+
+
+.form-card,
+.field-card {
+
+    background:#ffffff;
+    color:#1e293b;
+
+}
+
+
+/* Labels */
+
+.form-card label,
+.field-card label {
+
+    color:#1e293b;
+
+}
+
+
+/* Inputs */
+
+.form-control,
+.form-select,
+textarea {
+
+    background:#ffffff;
+    color:#1e293b;
+
+}
+
+
+.form-control::placeholder,
+textarea::placeholder {
+
+    color:#64748b;
+
+}
+
+
+/* ===============================
+   Dark Mode Form Fix
+================================ */
+
+
+.dark-mode .form-card,
+.dark-mode .field-card {
+
+    background:#1e293b !important;
+    color:#f8fafc;
+
+}
+
+
+.dark-mode .form-card label,
+.dark-mode .field-card label {
+
+    color:#f8fafc !important;
+
+}
+
+
+
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea {
+
+
+    background:#0f172a !important;
+
+    color:#f8fafc !important;
+
+    border-color:#334155;
+
+
+}
+
+
+
+.dark-mode .form-control::placeholder,
+.dark-mode textarea::placeholder {
+
+
+    color:#94a3b8 !important;
+
+
+}
+
+
+/* ===========================
+   Navbar Hamburger Icon
+=========================== */
+
+/* Light mode */
+.navbar-toggler {
+
+    border-color: #2563eb !important;
+
+}
+
+.navbar-toggler-icon {
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%232563eb' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+
+}
+
+
+/* Dark mode */
+.dark-mode .navbar-toggler {
+
+    border-color:#60a5fa !important;
+
+}
+
+
+.dark-mode .navbar-toggler-icon {
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%2360a5fa' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+
+}
+
+
+/* ==========================
+   Toast Dark Mode Fix
+========================== */
+
+
+.toast{
+
+    background:#ffffff;
+
+}
+
+
+
+.toast-header{
+
+    background:#ffffff;
+
+    color:#1e293b;
+
+}
+
+
+
+.toast-body{
+
+    color:#334155;
+
+    background:#ffffff;
+
+}
+
+
+
+/* Dark Mode */
+
+.dark-mode .toast{
+
+    background:#1e293b;
+
+    border:1px solid #334155;
+
+}
+
+
+
+.dark-mode .toast-header{
+
+    background:#1e293b;
+
+    color:#f8fafc;
+
+    border-bottom:1px solid #334155;
+
+}
+
+
+
+.dark-mode .toast-body{
+
+    background:#1e293b;
+
+    color:#e2e8f0;
+
+}
+
+
+
+.dark-mode .toast .btn-close{
+
+    filter:invert(1);
+
+}
+
+
