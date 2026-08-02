@@ -1,0 +1,670 @@
+{% extends "base.html" %}
+
+{% block title %}AI Itinerary{% endblock %}
+
+
+{% block content %}
+
+
+<style>
+
+.hero-card{
+
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    color:white;
+
+}
+
+
+.hero-card .text-muted{
+
+    color:rgba(255,255,255,.85)!important;
+
+}
+
+
+.summary-card{
+
+    border:0;
+    border-radius:20px;
+    transition:.3s;
+
+}
+
+
+.summary-card:hover{
+
+    transform:translateY(-6px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.12);
+
+}
+
+
+.summary-icon{
+
+    width:70px;
+    height:70px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    font-size:30px;
+
+}
+
+
+.itinerary-card{
+
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+
+}
+
+
+.action-btn{
+
+    border-radius:50px;
+
+}
+
+
+.section-title{
+
+    font-weight:700;
+
+}
+
+
+/* AI CONTENT */
+
+.itinerary-box{
+
+    background:#f8fafc;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:22px;
+
+    padding:40px;
+
+    font-size:16px;
+
+    line-height:2;
+
+    white-space:pre-wrap;
+
+    min-height:500px;
+
+}
+
+
+.itinerary-box h1,
+.itinerary-box h2,
+.itinerary-box h3,
+.itinerary-box h4{
+
+    color:#2563eb;
+
+    font-weight:700;
+
+}
+
+
+.itinerary-box strong{
+
+    color:#111827;
+
+}
+
+
+
+/* DARK MODE */
+
+
+.dark-mode .summary-card{
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+
+.dark-mode .itinerary-card .card-header{
+
+    background:#1e293b!important;
+
+    color:white;
+
+}
+
+
+.dark-mode .itinerary-box{
+
+    background:#0f172a;
+
+    border-color:#334155;
+
+    color:#f8fafc;
+
+}
+
+
+.dark-mode .itinerary-box strong{
+
+    color:white;
+
+}
+
+
+.dark-mode .itinerary-box h1,
+.dark-mode .itinerary-box h2,
+.dark-mode .itinerary-box h3,
+.dark-mode .itinerary-box h4{
+
+    color:#60a5fa;
+
+}
+
+
+
+@media(max-width:768px){
+
+.hero-buttons{
+
+    margin-top:20px;
+
+}
+
+
+.hero-buttons a{
+
+    width:100%;
+
+    margin-bottom:10px;
+
+}
+
+}
+
+
+</style>
+
+
+
+<div class="container-fluid py-4">
+
+
+
+<!-- HERO -->
+
+
+<div class="card hero-card shadow-lg mb-4">
+
+
+<div class="card-body p-5">
+
+
+<div class="row align-items-center">
+
+
+<div class="col-lg-8">
+
+
+<span class="badge bg-light text-primary px-3 py-2 mb-3">
+
+🤖 AI Generated Travel Plan
+
+</span>
+
+
+
+<h1 class="fw-bold mb-3">
+
+{{ trip.trip_name }}
+
+</h1>
+
+
+
+<p class="text-muted mb-4">
+
+Your personalized travel itinerary has been generated using AI.
+Review the schedule, copy it, print it, or regenerate another version anytime.
+
+</p>
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-calendar-event me-2"></i>
+
+{{ trip.start_date }}
+
+</span>
+
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-calendar-check me-2"></i>
+
+{{ trip.end_date }}
+
+</span>
+
+
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+<i class="bi bi-wallet2 me-2"></i>
+
+₹{{ trip.budget }}
+
+</span>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-lg-4 text-lg-end hero-buttons">
+
+
+<a href="{% url 'ai:regenerate_itinerary' trip.id %}"
+
+class="btn btn-light btn-lg me-2">
+
+
+<i class="bi bi-arrow-repeat me-2"></i>
+
+Regenerate
+
+
+</a>
+
+
+
+<a href="{% url 'trips:trip_detail' trip.id %}"
+
+class="btn btn-outline-light btn-lg">
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Back
+
+
+</a>
+
+<a href="{% url 'ai:send_itinerary_email' trip.id %}"
+class="btn btn-success">
+
+<i class="bi bi-envelope-fill"></i>
+
+Send To Email
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- SUMMARY -->
+
+
+<div class="row g-4 mb-4">
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card summary-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="summary-icon bg-primary-subtle text-primary">
+
+<i class="bi bi-calendar-event"></i>
+
+</div>
+
+
+<h6 class="fw-bold mt-3">
+
+Start Date
+
+</h6>
+
+
+<p class="text-muted">
+
+{{ trip.start_date }}
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card summary-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="summary-icon bg-success-subtle text-success">
+
+<i class="bi bi-calendar-check"></i>
+
+</div>
+
+
+<h6 class="fw-bold mt-3">
+
+End Date
+
+</h6>
+
+
+<p class="text-muted">
+
+{{ trip.end_date }}
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card summary-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="summary-icon bg-warning-subtle text-warning">
+
+<i class="bi bi-wallet2"></i>
+
+</div>
+
+
+<h6 class="fw-bold mt-3">
+
+Budget
+
+</h6>
+
+
+<p class="text-muted">
+
+₹{{ trip.budget }}
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-lg-3 col-md-6">
+
+
+<div class="card summary-card shadow-sm">
+
+
+<div class="card-body text-center">
+
+
+<div class="summary-icon bg-info-subtle text-info">
+
+<i class="bi bi-car-front-fill"></i>
+
+</div>
+
+
+<h6 class="fw-bold mt-3">
+
+Transport
+
+</h6>
+
+
+<p class="text-muted">
+
+{{ trip.transport }}
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<!-- AI OUTPUT -->
+
+
+<div class="card itinerary-card shadow-lg">
+
+
+<div class="card-header bg-white border-0 pt-4 px-4">
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+
+<div>
+
+
+<h3 class="section-title mb-1">
+
+<i class="bi bi-stars text-warning me-2"></i>
+
+AI Travel Plan
+
+</h3>
+
+
+<p class="text-muted">
+
+Your personalized itinerary generated for this trip.
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="d-flex gap-2">
+
+
+<button
+
+class="btn btn-outline-primary action-btn"
+
+onclick="copyItinerary()">
+
+
+<i class="bi bi-clipboard me-2"></i>
+
+Copy
+
+
+</button>
+
+
+
+
+<button
+
+class="btn btn-outline-success action-btn"
+
+onclick="window.print()">
+
+
+<i class="bi bi-printer me-2"></i>
+
+Print
+
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card-body">
+
+
+<div id="itinerary-content"
+
+class="itinerary-box">
+
+
+{{ itinerary|safe }}
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+
+
+function copyItinerary(){
+
+
+const text=document
+.getElementById("itinerary-content")
+.innerText;
+
+
+
+navigator.clipboard.writeText(text)
+.then(()=>{
+
+
+Swal.fire({
+
+icon:"success",
+
+title:"Copied!",
+
+text:"AI itinerary copied successfully.",
+
+timer:1500,
+
+showConfirmButton:false
+
+
+});
+
+
+});
+
+
+}
+
+
+
+</script>
+
+
+
+{% endblock %}
