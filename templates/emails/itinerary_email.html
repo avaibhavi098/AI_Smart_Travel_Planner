@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>
+AI Smart Travel Planner
+</title>
+
+
+<style>
+
+
+body{
+
+margin:0;
+padding:0;
+background:#f1f5ff;
+font-family:Arial,Helvetica,sans-serif;
+-webkit-text-size-adjust:100%;
+-ms-text-size-adjust:100%;
+
+}
+
+
+table{
+
+border-collapse:collapse;
+
+mso-table-lspace:0pt;
+mso-table-rspace:0pt;
+
+}
+
+
+
+.container{
+
+width:100%;
+background:#f1f5ff;
+padding:25px 0;
+
+}
+
+
+
+.main{
+
+width:100%;
+max-width:650px;
+margin:auto;
+background:#ffffff;
+
+border-radius:24px;
+-webkit-border-radius:24px;
+
+overflow:hidden;
+
+}
+
+
+
+/* HEADER */
+
+
+.header{
+
+background:#2563eb;
+
+background:linear-gradient(
+135deg,
+#2563eb,
+#7c3aed
+);
+
+padding:40px 20px;
+
+text-align:center;
+
+color:white;
+
+}
+
+
+
+.logo{
+
+font-size:50px;
+line-height:1;
+
+}
+
+
+
+.header h1{
+
+font-size:30px;
+margin:15px 0 8px;
+color:white;
+
+}
+
+
+
+.header p{
+
+font-size:16px;
+margin:0;
+color:#e0e7ff;
+
+}
+
+
+
+
+
+/* CONTENT */
+
+
+.content{
+
+padding:35px 25px;
+
+}
+
+
+
+.text{
+
+font-size:15px;
+
+line-height:1.7;
+
+color:#475569;
+
+margin-bottom:15px;
+
+}
+
+
+
+
+
+/* TRIP CARD */
+
+
+.trip-card{
+
+background:#f8fafc;
+
+border-radius:20px;
+-webkit-border-radius:20px;
+
+padding:25px;
+
+margin-top:25px;
+
+border:1px solid #e2e8f0;
+
+}
+
+
+
+.trip-title{
+
+font-size:24px;
+
+font-weight:bold;
+
+color:#2563eb;
+
+margin-bottom:20px;
+
+}
+
+
+
+
+/* INFO */
+
+
+.info{
+
+width:100%;
+
+}
+
+
+
+.info td{
+
+width:50%;
+
+padding:8px;
+
+vertical-align:top;
+
+}
+
+
+
+.box{
+
+background:#ffffff;
+
+border-radius:15px;
+-webkit-border-radius:15px;
+
+padding:18px;
+
+text-align:center;
+
+border:1px solid #e2e8f0;
+
+}
+
+
+
+.icon-box{
+
+font-size:28px;
+
+}
+
+
+
+.label{
+
+font-size:12px;
+
+text-transform:uppercase;
+
+letter-spacing:.5px;
+
+color:#64748b;
+
+margin-top:8px;
+
+}
+
+
+
+.value{
+
+font-size:15px;
+
+font-weight:bold;
+
+color:#1e293b;
+
+line-height:1.5;
+
+word-break:break-word;
+
+}
+
+
+
+
+
+/* FEATURES */
+
+
+.feature-title{
+
+text-align:center;
+
+font-size:20px;
+
+color:#7c3aed;
+
+margin:35px 0 20px;
+
+}
+
+
+
+.feature{
+
+background:#eef2ff;
+
+border-radius:15px;
+
+-webkit-border-radius:15px;
+
+padding:16px;
+
+margin-bottom:12px;
+
+border:1px solid #ddd6fe;
+
+}
+
+
+
+.feature b{
+
+color:#1e293b;
+
+font-size:15px;
+
+}
+
+
+
+.feature span{
+
+color:#64748b;
+
+font-size:14px;
+
+}
+
+
+
+
+
+/* PDF CARD */
+
+
+.pdf{
+
+background:#ecfdf5;
+
+border-radius:20px;
+
+-webkit-border-radius:20px;
+
+padding:25px;
+
+text-align:center;
+
+margin-top:30px;
+
+border:1px solid #bbf7d0;
+
+}
+
+
+
+.pdf h3{
+
+margin:0 0 8px;
+
+color:#15803d;
+
+}
+
+
+
+.pdf p{
+
+margin:0;
+
+color:#166534;
+
+}
+
+
+
+
+
+/* BUTTON */
+
+
+.button-wrap{
+
+text-align:center;
+
+margin-top:20px;
+
+}
+
+
+
+.button{
+
+display:inline-block;
+
+background:#2563eb;
+
+color:white!important;
+
+padding:13px 28px;
+
+border-radius:30px;
+
+-webkit-border-radius:30px;
+
+text-decoration:none;
+
+font-weight:bold;
+
+font-size:14px;
+
+}
+
+
+
+
+
+/* FOOTER */
+
+
+.footer{
+
+background:#111827;
+
+padding:35px 20px;
+
+text-align:center;
+
+}
+
+
+
+.footer h2{
+
+color:white;
+
+font-size:18px;
+
+margin:0 0 10px;
+
+}
+
+
+
+.footer p{
+
+color:#cbd5e1;
+
+font-size:14px;
+
+margin:5px;
+
+}
+
+
+
+
+
+/* MOBILE */
+
+
+@media only screen and (max-width:600px){
+
+
+.container{
+
+padding:0!important;
+
+}
+
+
+
+.main{
+
+width:100%!important;
+
+border-radius:0!important;
+
+-webkit-border-radius:0!important;
+
+}
+
+
+
+.content{
+
+padding:25px 15px!important;
+
+}
+
+
+
+.header{
+
+padding:30px 15px!important;
+
+}
+
+
+
+.header h1{
+
+font-size:24px!important;
+
+}
+
+
+
+.info td{
+
+display:block!important;
+
+width:100%!important;
+
+padding:6px 0!important;
+
+}
+
+
+
+.trip-card{
+
+padding:15px!important;
+
+}
+
+
+
+}
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+<table class="container" width="100%">
+
+<tr>
+
+<td align="center">
+
+
+<table class="main">
+
+
+
+<!-- HEADER -->
+
+
+<tr>
+
+<td class="header">
+
+
+<div class="logo">
+
+✈️🌍
+
+</div>
+
+
+<h1>
+
+AI Smart Travel Planner
+
+</h1>
+
+
+<p>
+
+Your personalized journey is ready
+
+</p>
+
+
+</td>
+
+</tr>
+
+
+
+
+
+<!-- BODY -->
+
+
+<tr>
+
+<td class="content">
+
+
+<p class="text">
+
+Hello <b>{{ user.username }}</b> 👋
+
+</p>
+
+
+<p class="text">
+
+Your AI generated travel itinerary has been created successfully.
+
+Your complete travel guide PDF is attached with this email.
+
+</p>
+
+
+
+
+<div class="trip-card">
+
+
+<div class="trip-title">
+
+🌍 {{ trip.trip_name }}
+
+</div>
+
+
+
+<table class="info">
+
+
+<tr>
+
+
+<td>
+
+
+<div class="box">
+
+
+<div class="icon-box">
+📅
+</div>
+
+
+<div class="label">
+
+Travel Dates
+
+</div>
+
+
+<div class="value">
+
+{{ trip.start_date }}
+
+<br>
+
+{{ trip.end_date }}
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+<td>
+
+
+<div class="box">
+
+
+<div class="icon-box">
+💰
+</div>
+
+
+<div class="label">
+
+Budget
+
+</div>
+
+
+<div class="value">
+
+₹{{ trip.budget }}
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+<tr>
+
+
+<td>
+
+
+<div class="box">
+
+
+<div class="icon-box">
+👥
+</div>
+
+
+<div class="label">
+
+Travelers
+
+</div>
+
+
+<div class="value">
+
+{{ trip.travelers }}
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+<td>
+
+
+<div class="box">
+
+
+<div class="icon-box">
+🚗
+</div>
+
+
+<div class="label">
+
+Transport
+
+</div>
+
+
+<div class="value">
+
+{{ trip.transport }}
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+</tr>
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+
+<h2 class="feature-title">
+
+✨ Your Travel Guide Includes
+
+</h2>
+
+
+
+
+<div class="feature">
+
+<b>📍 Destinations</b>
+
+<br>
+
+<span>
+
+Top attractions and places to visit
+
+</span>
+
+</div>
+
+
+
+
+<div class="feature">
+
+<b>🗓 Day Wise Plan</b>
+
+<br>
+
+<span>
+
+Complete daily schedule
+
+</span>
+
+</div>
+
+
+
+
+
+<div class="feature">
+
+<b>🍴 Food Guide</b>
+
+<br>
+
+<span>
+
+Local food recommendations
+
+</span>
+
+</div>
+
+
+
+
+
+<div class="feature">
+
+<b>🎒 Travel Tips</b>
+
+<br>
+
+<span>
+
+Important travel suggestions
+
+</span>
+
+</div>
+
+
+
+
+
+
+<div class="pdf">
+
+
+<h3>
+
+📄 PDF Travel Guide Attached
+
+</h3>
+
+
+<p>
+
+Your complete AI itinerary is ready.
+
+</p>
+
+</div>
+</td>
+</tr>
+
+<!-- FOOTER -->
+
+
+<tr>
+
+<td class="footer">
+
+
+<h2>
+
+✈️ AI Smart Travel Planner
+
+</h2>
+
+
+<p>
+
+Plan smarter. Travel better. 🌍
+
+</p>
+
+
+<p>
+
+Have a safe and memorable journey ❤️
+
+</p>
+
+
+</td>
+
+</tr>
+
+
+
+
+
+
+</table>
+
+
+</td>
+
+</tr>
+
+
+</table>
+
+
+</body>
+
+</html>
