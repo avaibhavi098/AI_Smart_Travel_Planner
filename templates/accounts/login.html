@@ -1,0 +1,711 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<style>
+
+.login-page{
+
+min-height:85vh;
+
+display:flex;
+align-items:center;
+
+}
+
+.login-card{
+
+border:0;
+border-radius:28px;
+overflow:hidden;
+
+box-shadow:0 25px 60px rgba(0,0,0,.12);
+
+}
+
+.login-left{
+
+background:linear-gradient(135deg,#2563eb,#7c3aed);
+color:#fff;
+
+position:relative;
+
+padding:60px 50px;
+
+}
+
+.login-left::before{
+
+content:"";
+
+position:absolute;
+
+width:300px;
+height:300px;
+
+background:rgba(255,255,255,.08);
+
+border-radius:50%;
+
+top:-80px;
+right:-100px;
+
+}
+
+.login-left::after{
+
+content:"";
+
+position:absolute;
+
+width:180px;
+height:180px;
+
+background:rgba(255,255,255,.08);
+
+border-radius:50%;
+
+bottom:-60px;
+left:-60px;
+
+}
+
+.login-content{
+
+position:relative;
+z-index:2;
+
+}
+
+.logo-circle{
+
+width:110px;
+height:110px;
+
+margin-bottom:25px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+backdrop-filter:blur(10px);
+
+border:4px solid rgba(255,255,255,.2);
+
+}
+
+.logo-circle i{
+
+font-size:56px;
+
+}
+
+.feature{
+
+display:flex;
+align-items:center;
+
+margin-top:22px;
+
+}
+
+.feature-icon{
+
+width:46px;
+height:46px;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.15);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin-right:15px;
+
+}
+
+.login-right{
+
+padding:60px 50px;
+
+}
+
+.form-control{
+
+border-radius:14px;
+padding:14px 16px;
+
+}
+
+.form-control:focus{
+
+box-shadow:0 0 0 .2rem rgba(37,99,235,.15);
+
+}
+
+.login-btn{
+
+border-radius:50px;
+
+padding:14px;
+
+font-weight:600;
+
+}
+
+.dark-mode .login-right{
+
+background:#0f172a;
+color:#fff;
+
+}
+
+.dark-mode .form-control{
+
+background:#1e293b;
+border-color:#334155;
+color:#fff;
+
+}
+
+.dark-mode .form-control:focus{
+
+background:#1e293b;
+color:#fff;
+
+}
+
+@media(max-width:991px){
+
+.login-left{
+
+display:none;
+
+}
+
+.login-right{
+
+padding:40px 30px;
+
+}
+
+}
+/* Mobile Hero */
+
+@media(max-width:991px){
+
+.login-left{
+
+display:block;
+padding:35px 25px;
+text-align:center;
+
+}
+
+
+.login-left .feature{
+
+display:none;
+
+}
+
+
+.logo-circle{
+
+width:80px;
+height:80px;
+margin:auto;
+
+}
+
+
+.logo-circle i{
+
+font-size:40px;
+
+}
+
+
+.login-left h2{
+
+font-size:24px;
+
+}
+
+
+.login-left p{
+
+font-size:14px;
+
+}
+
+
+.login-right{
+
+padding:35px 25px;
+
+}
+
+}
+
+</style>
+
+<div class="container login-page">
+
+<div class="row justify-content-center w-100">
+
+<div class="col-xl-10">
+
+<div class="card login-card">
+
+<div class="row g-0">
+
+<!-- Left Side -->
+
+<div class="col-lg-6 login-left">
+
+<div class="login-content">
+
+<div class="logo-circle">
+
+<i class="bi bi-airplane-engines-fill"></i>
+
+</div>
+
+<h2 class="fw-bold mb-3">
+
+AI Smart Travel Planner
+
+</h2>
+
+<p class="mb-4">
+
+Plan smarter journeys with AI-generated itineraries,
+destination recommendations, route optimization,
+and intelligent travel assistance.
+
+</p>
+
+<div class="feature">
+
+<div class="feature-icon">
+
+<i class="bi bi-stars"></i>
+
+</div>
+
+<div>
+
+<h6 class="mb-1">
+
+AI Itinerary Generator
+
+</h6>
+
+<small>Create personalized travel plans instantly.</small>
+
+</div>
+
+</div>
+
+<div class="feature">
+
+<div class="feature-icon">
+
+<i class="bi bi-map"></i>
+
+</div>
+
+<div>
+
+<h6 class="mb-1">
+
+Interactive Maps
+
+</h6>
+
+<small>Discover routes and nearby attractions.</small>
+
+</div>
+
+</div>
+
+<div class="feature">
+
+<div class="feature-icon">
+
+<i class="bi bi-robot"></i>
+
+</div>
+
+<div>
+
+<h6 class="mb-1">
+
+AI Assistant
+
+</h6>
+
+<small>Ask anything about your trip anytime.</small>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Right Side -->
+
+<div class="col-lg-6 login-right">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold">
+
+Welcome Back 👋
+
+</h2>
+
+<p class="text-muted">
+
+Sign in to continue planning your adventures.
+
+</p>
+
+</div>
+
+<form method="POST" autocomplete="off">
+
+{% csrf_token %}
+
+
+<div class="mb-4">
+
+<label class="form-label fw-semibold">
+
+<i class="bi bi-person me-2"></i>
+
+Username
+
+</label>
+
+
+<input
+
+type="text"
+
+name="username"
+
+class="form-control"
+
+placeholder="Enter your username"
+
+autocomplete="username"
+
+required>
+
+</div>
+
+
+
+
+<div class="mb-4">
+
+<label class="form-label fw-semibold">
+
+<i class="bi bi-lock me-2"></i>
+
+Password
+
+</label>
+
+
+<input
+
+type="password"
+
+name="password"
+
+class="form-control"
+
+placeholder="Enter your password"
+
+autocomplete="current-password"
+
+required>
+
+</div>
+
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+<div class="form-check">
+
+<input
+
+class="form-check-input"
+
+type="checkbox"
+
+id="rememberMe">
+
+
+<label
+
+class="form-check-label"
+
+for="rememberMe">
+
+Remember me
+
+</label>
+
+</div>
+
+
+
+<a href="{% url 'password_reset' %}"
+
+class="text-decoration-none">
+
+Forgot Password?
+
+</a>
+
+
+
+</div>
+
+
+
+
+<div class="d-grid">
+
+
+<button
+
+type="submit"
+
+class="btn btn-primary btn-lg login-btn">
+
+
+<i class="bi bi-box-arrow-in-right me-2"></i>
+
+Login
+
+
+</button>
+
+
+</div>
+
+
+<hr class="my-4">
+
+
+<div class="text-center">
+
+
+<span class="text-muted">
+
+Don't have an account?
+
+</span>
+
+
+<a
+
+href="{% url 'register' %}"
+
+class="fw-semibold text-decoration-none ms-1">
+
+Create Account
+
+</a>
+
+
+</div>
+
+
+</form>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+.login-card{
+
+animation:fadeUp .6s ease;
+
+}
+
+.feature{
+
+transition:.3s;
+
+}
+
+.feature:hover{
+
+transform:translateX(6px);
+
+}
+
+.logo-circle{
+
+animation:floatIcon 4s ease-in-out infinite;
+
+}
+
+.login-btn{
+
+transition:.3s;
+
+}
+
+.login-btn:hover{
+
+transform:translateY(-2px);
+box-shadow:0 12px 30px rgba(37,99,235,.25);
+
+}
+
+.form-control{
+
+transition:.3s;
+
+}
+
+.form-control:hover{
+
+border-color:#2563eb;
+
+}
+
+.dark-mode .card.bg-light{
+
+background:#1e293b!important;
+
+}
+
+.dark-mode .card.bg-light .text-muted{
+
+color:#cbd5e1!important;
+
+}
+
+.dark-mode .form-check-label{
+
+color:#e2e8f0;
+
+}
+
+.dark-mode a{
+
+color:#60a5fa;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+transform:translateY(25px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+@keyframes floatIcon{
+
+0%,100%{
+
+transform:translateY(0);
+
+}
+
+50%{
+
+transform:translateY(-10px);
+
+}
+
+}
+
+@media(max-width:992px){
+
+.login-right{
+
+padding:40px 28px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.login-page{
+
+padding:20px 0;
+
+}
+
+.login-card{
+
+border-radius:22px;
+
+}
+
+.login-right{
+
+padding:30px 22px;
+
+}
+
+.login-btn{
+
+padding:13px;
+
+}
+
+.form-control{
+
+padding:13px 15px;
+
+}
+
+}
+
+</style>
+
+{% endblock %}
