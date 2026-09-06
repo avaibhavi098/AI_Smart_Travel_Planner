@@ -1,0 +1,565 @@
+{% extends "base.html" %}
+
+{% block title %}My Trips{% endblock %}
+
+{% block content %}
+
+<style>
+
+.trip-card{
+
+    border:0;
+    border-radius:22px;
+    overflow:hidden;
+    transition:.3s;
+
+}
+
+.trip-card:hover{
+
+    transform:translateY(-6px);
+    box-shadow:0 1rem 2rem rgba(0,0,0,.12);
+
+}
+
+
+.trip-header{
+
+    padding:25px;
+    background:linear-gradient(
+        135deg,
+        #0d6efd,
+        #6f42c1
+    );
+
+    color:white;
+
+    position:relative;
+    overflow:hidden;
+
+}
+
+
+.trip-header::after{
+
+    content:"";
+    position:absolute;
+
+    width:140px;
+    height:140px;
+
+    right:-40px;
+    top:-40px;
+
+    background:rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+}
+
+
+.trip-header::before{
+
+    content:"";
+    position:absolute;
+
+    width:160px;
+    height:160px;
+
+    left:-50px;
+    bottom:-60px;
+
+    background:rgba(255,255,255,.08);
+
+    border-radius:50%;
+
+}
+
+
+.action-btn{
+
+    border-radius:50px;
+
+}
+
+
+.stats-box{
+
+    border-radius:18px;
+
+}
+
+
+.empty-box{
+
+    border-radius:24px;
+
+}
+
+
+@keyframes fadeUp{
+
+from{
+
+    opacity:0;
+    transform:translateY(25px);
+
+}
+
+to{
+
+    opacity:1;
+    transform:translateY(0);
+
+}
+
+}
+
+
+.trip-card{
+
+    animation:fadeUp .5s ease;
+
+}
+
+
+@media(max-width:768px){
+
+    .trip-header{
+
+        padding:20px;
+
+    }
+
+}
+
+</style>
+
+
+
+<div class="container py-5">
+
+
+<!-- Page Header -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-5">
+
+
+<div>
+
+<h2 class="fw-bold mb-1">
+
+<i class="bi bi-suitcase-fill text-primary me-2"></i>
+
+My Trips
+
+</h2>
+
+
+<p class="text-muted mb-0">
+
+Manage all your travel plans from one place.
+
+</p>
+
+
+</div>
+
+
+<a href="{% url 'trips:create_trip' %}"
+class="btn btn-primary rounded-pill px-4">
+
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Create Trip
+
+
+</a>
+
+
+</div>
+
+
+
+
+{% if trips %}
+
+
+
+<div class="row g-4">
+
+
+{% for trip in trips %}
+
+
+
+<div class="col-xl-4 col-lg-6">
+
+
+<div class="card trip-card shadow-sm h-100">
+
+
+
+<!-- Header -->
+
+
+<div class="trip-header">
+
+
+<div class="d-flex justify-content-between align-items-start">
+
+
+<div>
+
+
+<h4 class="fw-bold mb-2">
+
+{{ trip.trip_name }}
+
+</h4>
+
+
+<small>
+
+<i class="bi bi-calendar-event me-2"></i>
+
+{{ trip.start_date }}
+
+to
+
+{{ trip.end_date }}
+
+</small>
+
+
+</div>
+
+
+<span class="badge bg-light text-primary">
+
+{{ trip.status }}
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- Body -->
+
+
+<div class="card-body p-4">
+
+
+
+<div class="row text-center mb-4">
+
+
+<div class="col-6">
+
+
+<div class="stats-box border p-3">
+
+
+<i class="bi bi-wallet2 fs-3 text-success"></i>
+
+
+<div class="small text-muted mt-2">
+
+Budget
+
+</div>
+
+
+<strong>
+
+₹{{ trip.budget }}
+
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="col-6">
+
+
+<div class="stats-box border p-3">
+
+
+<i class="bi bi-people-fill fs-3 text-primary"></i>
+
+
+<div class="small text-muted mt-2">
+
+Travelers
+
+</div>
+
+
+<strong>
+
+{{ trip.travelers }}
+
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="border rounded-4 p-3 mb-4">
+
+
+<div class="d-flex justify-content-between mb-3">
+
+
+<span class="text-muted">
+
+<i class="bi bi-calendar-check me-2"></i>
+
+Start
+
+</span>
+
+
+<strong>
+
+{{ trip.start_date }}
+
+</strong>
+
+
+</div>
+
+
+
+
+<div class="d-flex justify-content-between mb-3">
+
+
+<span class="text-muted">
+
+<i class="bi bi-calendar-x me-2"></i>
+
+End
+
+</span>
+
+
+<strong>
+
+{{ trip.end_date }}
+
+</strong>
+
+
+</div>
+
+
+
+
+
+<div class="d-flex justify-content-between">
+
+
+<span class="text-muted">
+
+<i class="bi bi-car-front me-2"></i>
+
+Transport
+
+</span>
+
+
+<strong>
+
+{{ trip.transport }}
+
+</strong>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="d-grid mb-3">
+
+
+<a href="{% url 'trips:trip_detail' trip.id %}"
+
+class="btn btn-primary action-btn">
+
+
+<i class="bi bi-box-arrow-up-right me-2"></i>
+
+Open Trip
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="row g-2">
+
+
+<div class="col-6">
+
+
+<a href="{% url 'trips:edit_trip' trip.id %}"
+
+class="btn btn-warning w-100 action-btn">
+
+
+<i class="bi bi-pencil-square me-2"></i>
+
+Edit
+
+
+</a>
+
+
+</div>
+
+
+
+
+
+<div class="col-6">
+
+
+<a href="{% url 'trips:delete_trip' trip.id %}"
+
+class="btn btn-danger w-100 action-btn">
+
+
+<i class="bi bi-trash me-2"></i>
+
+Delete
+
+
+</a>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+{% endfor %}
+
+
+</div>
+
+
+
+
+{% else %}
+
+
+
+<div class="card border-0 shadow empty-box">
+
+
+<div class="card-body text-center py-5">
+
+
+<div class="display-1 text-primary mb-4">
+
+<i class="bi bi-map-fill"></i>
+
+</div>
+
+
+
+<h2 class="fw-bold">
+
+No Trips Yet
+
+</h2>
+
+
+
+<p class="text-muted mb-4">
+
+Start your travel journey by creating your first trip.
+
+</p>
+
+
+
+<a href="{% url 'trips:create_trip' %}"
+
+class="btn btn-primary btn-lg rounded-pill px-5">
+
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Create Your First Trip
+
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+</div>
+
+
+{% endblock %}
