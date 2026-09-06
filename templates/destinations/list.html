@@ -1,0 +1,698 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trip.trip_name }}{% endblock %}
+
+{% block content %}
+
+<style>
+
+.destination-card{
+    border:0;
+    border-radius:18px;
+    margin-bottom:16px;
+    background:var(--bs-body-bg);
+    transition:.25s;
+    cursor:move;
+}
+
+.destination-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 .6rem 1.2rem rgba(0,0,0,.08);
+}
+
+.drag-handle{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:rgba(13,110,253,.08);
+    color:#0d6efd;
+    cursor:grab;
+}
+
+.drag-handle:active{
+    cursor:grabbing;
+}
+
+.sortable-ghost{
+    opacity:.35;
+}
+
+.sortable-chosen{
+    transform:scale(1.02);
+}
+
+.info-card{
+    border:0;
+    border-radius:18px;
+}
+
+.action-btn{
+    border-radius:12px;
+}
+
+.stats-card{
+    border:0;
+    border-radius:18px;
+    transition:.25s;
+}
+
+.stats-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 .6rem 1rem rgba(0,0,0,.08);
+}
+
+.empty-box{
+    border-radius:20px;
+}
+
+@media(max-width:768px){
+
+    .header-buttons{
+        margin-top:15px;
+        width:100%;
+    }
+
+    .header-buttons a{
+        width:100%;
+        margin-bottom:10px;
+    }
+
+}
+
+</style>
+
+<div class="container py-4">
+
+<div class="card shadow-sm border-0 rounded-4 mb-4">
+
+<div class="card-body p-4">
+
+<div class="row align-items-center">
+
+<div class="col-lg-8">
+
+<span class="badge bg-success mb-3">
+
+Step 2 of 2
+
+</span>
+
+<h2 class="fw-bold mb-2">
+
+{{ trip.trip_name }}
+
+</h2>
+
+<p class="text-muted mb-0">
+
+Arrange your destinations by dragging them into your preferred order.
+After saving, AI Itinerary will use this sequence while Route Optimization
+can calculate a better travel path whenever needed.
+
+</p>
+
+</div>
+
+<div class="col-lg-4 text-lg-end header-buttons">
+
+<a href="{% url 'trips:trip_detail' trip.id %}"
+class="btn btn-outline-secondary action-btn me-2">
+
+<i class="bi bi-arrow-left"></i>
+
+Back
+
+</a>
+
+<a href="{% url 'destinations:add_destination' trip.id %}"
+class="btn btn-primary action-btn">
+
+<i class="bi bi-plus-circle"></i>
+
+Add Destination
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% if destinations %}
+
+<div class="card shadow-sm border-0 rounded-4">
+
+<div class="card-header bg-white border-0 p-4">
+
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+
+<div>
+
+<h4 class="fw-bold mb-1">
+
+<i class="bi bi-pin-map-fill text-primary me-2"></i>
+
+Trip Destinations
+
+</h4>
+
+<p class="text-muted mb-0">
+
+Drag destinations using the handle on the left.
+
+{% if destinations|dictsort:"is_source" %}
+
+<br>
+
+<i class="bi bi-info-circle me-1"></i>
+
+The green marked location is your trip starting point.
+
+{% endif %}
+
+</p>
+</div>
+
+<span class="badge bg-primary fs-6 px-3 py-2">
+
+{{ destinations|length }} Destination{{ destinations|length|pluralize }}
+
+</span>
+
+</div>
+
+</div>
+
+<div class="card-body">
+
+<ul
+id="destination-list"
+class="list-group list-group-flush">
+
+{% for destination in destinations %}
+
+<li
+class="list-group-item destination-card {% if destination.is_source %}border-success border-2{% endif %}"
+data-id="{{ destination.id }}">
+
+<div class="row align-items-center">
+
+<div class="col-lg-7">
+
+<div class="d-flex align-items-center">
+
+<div class="drag-handle me-3">
+
+<i class="bi bi-grip-vertical fs-3"></i>
+
+</div>
+
+<div>
+
+<h5 class="fw-bold mb-1">
+
+{{ destination.city }}
+
+{% if destination.is_source %}
+
+<span class="badge bg-success ms-2">
+
+<i class="bi bi-geo-alt-fill me-1"></i>
+
+Starting Point
+
+</span>
+
+{% endif %}
+
+</h5>
+
+<div class="text-muted">
+
+<i class="bi bi-geo-alt-fill me-1"></i>
+
+{{ destination.state }}, {{ destination.country }}
+
+</div>
+
+{% if destination.notes %}
+
+<div class="mt-2 small text-muted">
+
+<i class="bi bi-chat-left-text me-1"></i>
+
+{{ destination.notes }}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+
+<a href="{% url 'destinations:edit_destination' destination.id %}"
+class="btn btn-outline-primary btn-sm action-btn me-2">
+
+<i class="bi bi-pencil-square"></i>
+
+Edit
+
+</a>
+
+<a href="{% url 'destinations:delete_destination' destination.id %}"
+class="btn btn-outline-danger btn-sm action-btn">
+
+<i class="bi bi-trash"></i>
+
+Delete
+
+</a>
+
+</div>
+
+</div>
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+<div class="alert alert-warning border-0 rounded-4 mt-4">
+
+    <div class="d-flex">
+
+        <div class="display-6 me-3">
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+        </div>
+
+        <div>
+
+            <h5 class="fw-bold">
+
+                Before Saving
+
+            </h5>
+
+            <p class="mb-2">
+
+                Saving stores the order exactly as shown below.
+
+            </p>
+
+            <ul class="mb-0">
+
+                <li>Your manual arrangement becomes the default trip order.</li>
+
+                <li>AI Itinerary generation follows this saved order.</li>
+
+                <li>Optimize Route only calculates a better travel path.</li>
+
+                <li>You can always rearrange and save again later.</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="text-end mt-4">
+
+<button
+id="saveOrder"
+class="btn btn-primary btn-lg rounded-pill px-4">
+
+<i class="bi bi-floppy me-2"></i>
+
+Save Destination Order
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-4 g-4">
+
+<div class="col-lg-4">
+
+<div class="card stats-card shadow-sm">
+
+<div class="card-body text-center">
+
+<div class="display-5 text-primary">
+
+<i class="bi bi-geo-alt-fill"></i>
+
+</div>
+
+<h2 class="fw-bold mt-2">
+
+{{ destinations|length }}
+
+</h2>
+
+<p class="text-muted mb-0">
+
+Total Destinations
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<a
+href="{% url 'routes:route_map' trip.id %}"
+class="text-decoration-none">
+
+<div class="card stats-card shadow-sm bg-success text-white">
+
+<div class="card-body text-center py-4">
+
+<div class="display-5">
+
+<i class="bi bi-sign-turn-right-fill"></i>
+
+</div>
+
+<h4 class="fw-bold mt-3">
+
+Optimize Route
+
+</h4>
+
+<p class="mb-0">
+
+Find the shortest travel route
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<div class="col-lg-4">
+
+<a
+href="{% url 'ai:generate_itinerary' trip.id %}"
+class="text-decoration-none">
+
+<div class="card stats-card shadow-sm bg-warning">
+
+<div class="card-body text-center py-4">
+
+<div class="display-5">
+
+<i class="bi bi-stars"></i>
+
+</div>
+
+<h4 class="fw-bold mt-3">
+
+AI Itinerary
+
+</h4>
+
+<p class="mb-0">
+
+Generate a smart travel plan
+
+</p>
+
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+
+{% else %}
+
+<div class="card shadow border-0 empty-box">
+
+<div class="card-body text-center py-5">
+
+<div class="display-2 text-primary mb-3">
+
+<i class="bi bi-map"></i>
+
+</div>
+
+<h3 class="fw-bold">
+
+No destinations added
+
+</h3>
+
+<p class="text-muted mb-4">
+
+Add your first destination to begin planning your trip.
+
+</p>
+
+<a
+href="{% url 'destinations:add_destination' trip.id %}"
+class="btn btn-primary btn-lg rounded-pill px-4">
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Add Destination
+
+</a>
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+const destinationList = document.getElementById("destination-list");
+
+if(destinationList){
+
+Sortable.create(destinationList,{
+
+animation:250,
+
+handle:".drag-handle",
+
+ghostClass:"sortable-ghost",
+
+chosenClass:"sortable-chosen"
+
+});
+
+}
+
+document.getElementById("saveOrder")?.addEventListener("click",async()=>{
+
+const confirmSave=await Swal.fire({
+
+icon:"warning",
+
+title:"Save Destination Order?",
+
+html:`
+
+<div class="text-start">
+
+<p>
+
+The current destination order will become your default trip order.
+
+</p>
+
+<div class="alert alert-warning mb-0">
+
+<ul class="mb-0">
+
+<li>AI itinerary will use this saved order.</li>
+
+<li>Optimize Route does not overwrite this order.</li>
+
+<li>You can always rearrange later.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+`,
+
+showCancelButton:true,
+
+confirmButtonText:"Save Order",
+
+cancelButtonText:"Cancel",
+
+confirmButtonColor:"#0d6efd",
+
+cancelButtonColor:"#6c757d",
+
+width:650
+
+});
+
+if(!confirmSave.isConfirmed){
+
+return;
+
+}
+
+const order=[
+
+...document.querySelectorAll("#destination-list li")
+
+].map(item=>item.dataset.id);
+
+
+try{
+
+const response=await fetch(
+"{% url 'destinations:reorder_destinations' trip.id %}",
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json",
+
+"X-CSRFToken":"{{ csrf_token }}"
+
+},
+
+body:JSON.stringify({
+
+order:order
+
+})
+
+}
+
+);
+
+const data=await response.json();
+
+if(data.success){
+
+await Swal.fire({
+
+icon:"success",
+
+title:"Destination Order Saved!",
+
+html:`
+
+<div class="text-center">
+
+<div class="display-6 text-success mb-3">
+
+<i class="bi bi-check-circle-fill"></i>
+
+</div>
+
+<p class="mb-2">
+
+Your destination order has been updated successfully.
+
+</p>
+
+<div class="alert alert-success mb-0">
+
+Future AI itinerary generation will follow this saved order.
+
+</div>
+
+</div>
+
+`,
+
+confirmButtonColor:"#198754"
+
+});
+
+location.reload();
+
+}
+
+else{
+
+Swal.fire({
+
+icon:"error",
+
+title:"Unable to Save",
+
+text:"Something went wrong while saving the destination order.",
+
+confirmButtonColor:"#dc3545"
+
+});
+
+}
+
+}
+
+catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+
+title:"Network Error",
+
+text:"Please check your internet connection and try again.",
+
+confirmButtonColor:"#dc3545"
+
+});
+
+}
+
+});
+
+</script>
+
+{% endblock %}
+

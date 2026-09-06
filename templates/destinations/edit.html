@@ -1,0 +1,1099 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Destination
+{% endblock %}
+
+
+{% block content %}
+
+
+<style>
+
+
+.hero-card{
+
+background:linear-gradient(135deg,#f59e0b,#f97316);
+
+color:#fff;
+
+border:0;
+
+border-radius:28px;
+
+overflow:hidden;
+
+}
+
+
+.hero-card .text-muted{
+
+color:rgba(255,255,255,.9)!important;
+
+}
+
+
+
+.hero-icon{
+
+font-size:110px;
+
+opacity:.9;
+
+}
+
+
+
+.edit-card{
+
+border:0;
+
+border-radius:24px;
+
+overflow:hidden;
+
+}
+
+
+
+.form-card{
+
+border:0;
+
+border-radius:20px;
+
+transition:.3s;
+
+}
+
+
+
+.form-card:hover{
+
+transform:translateY(-5px);
+
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+
+}
+
+
+
+.input-icon{
+
+position:absolute;
+
+left:18px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+color:#f59e0b;
+
+z-index:5;
+
+}
+
+
+
+.form-control,
+.form-select,
+textarea{
+
+border-radius:14px;
+
+padding:14px 18px;
+
+transition:.25s;
+
+}
+
+
+
+#id_city{
+
+padding-left:50px;
+
+}
+
+
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+
+box-shadow:0 0 0 .2rem rgba(245,158,11,.15);
+
+border-color:#f59e0b;
+
+}
+
+
+
+
+#suggestions{
+
+border-radius:16px;
+
+overflow:hidden;
+
+border:none;
+
+z-index:9999;
+
+max-height:250px;
+
+overflow-y:auto;
+
+}
+
+
+
+#suggestions .list-group-item{
+
+padding:14px 18px;
+
+transition:.25s;
+
+cursor:pointer;
+
+}
+
+
+
+#suggestions .list-group-item:hover{
+
+background:#fff7ed;
+
+}
+
+
+
+.action-btn{
+
+border-radius:50px;
+
+padding:13px 28px;
+
+}
+
+
+
+.dark-mode .form-card{
+
+background:#0f172a;
+
+border:1px solid #334155;
+
+}
+
+
+
+.dark-mode .form-control,
+.dark-mode textarea{
+
+background:#1e293b;
+
+border-color:#334155;
+
+color:#fff;
+
+}
+
+
+
+.dark-mode #suggestions .list-group-item{
+
+background:#1e293b;
+
+color:#fff;
+
+border-color:#334155;
+
+}
+
+
+
+.dark-mode #suggestions .list-group-item:hover{
+
+background:#334155;
+
+}
+
+
+
+@media(max-width:768px){
+
+
+.hero-card .card-body{
+
+padding:2rem!important;
+
+}
+
+
+.hero-icon{
+
+font-size:70px;
+
+}
+
+
+}
+
+
+
+</style>
+
+
+
+
+
+<div class="container-fluid py-4">
+
+
+
+<div class="card hero-card shadow-lg mb-5">
+
+
+<div class="card-body p-5">
+
+
+<div class="row align-items-center">
+
+
+
+<div class="col-lg-8">
+
+
+<span class="badge bg-light text-dark px-3 py-2 mb-3">
+
+✏️ Edit Destination
+
+</span>
+
+
+
+<h1 class="fw-bold mb-3">
+
+Update Destination Details
+
+</h1>
+
+
+
+<p class="text-muted mb-4">
+
+Search for a different location or update your destination information.
+Your trip itinerary will automatically reflect the latest destination details.
+
+</p>
+
+
+
+<div class="d-flex flex-wrap gap-2">
+
+
+<span class="badge bg-white text-dark px-3 py-2">
+
+<i class="bi bi-geo-alt-fill me-2"></i>
+
+Destination Editor
+
+</span>
+
+
+
+<span class="badge bg-warning text-dark px-3 py-2">
+
+<i class="bi bi-pencil-square me-2"></i>
+
+Smart Location Search
+
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-lg-4 text-center d-none d-lg-block">
+
+
+<i class="bi bi-pencil-square hero-icon"></i>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-xl-9">
+
+
+
+<div class="card edit-card shadow-lg">
+
+
+
+<div class="card-header bg-white border-0 py-4 px-4">
+
+
+<h3 class="fw-bold mb-1">
+
+
+<i class="bi bi-geo-alt-fill text-warning me-2"></i>
+
+
+Destination Information
+
+
+</h3>
+
+
+<p class="text-muted mb-0">
+
+Modify the location details and save the updated destination.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="card-body p-4">
+
+
+
+<form method="post">
+
+
+{% csrf_token %}
+
+
+
+{{ form.state }}
+
+{{ form.country }}
+
+{{ form.latitude }}
+
+{{ form.longitude }}
+
+
+
+
+
+{% if form.non_field_errors %}
+
+
+<div class="alert alert-danger rounded-4">
+
+{{ form.non_field_errors }}
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+<div class="card form-card shadow-sm">
+
+
+<div class="card-body p-4">
+
+
+
+
+
+<div class="mb-4 position-relative">
+
+
+<label class="form-label fw-semibold">
+
+
+<i class="bi bi-search me-2 text-warning"></i>
+
+
+Search Destination
+
+
+</label>
+
+
+
+<div class="position-relative">
+
+
+<i class="bi bi-geo-alt-fill input-icon"></i>
+
+
+{{ form.city }}
+
+
+
+</div>
+
+
+
+
+
+<div
+id="suggestions"
+class="list-group position-absolute w-100 mt-2 shadow-lg">
+
+
+</div>
+
+
+
+
+<small class="text-muted d-block mt-2">
+
+
+<i class="bi bi-lightbulb me-1"></i>
+
+
+Start typing at least two characters to search for cities.
+
+
+</small>
+
+
+</div>
+
+
+<div class="row g-4">
+
+
+<div class="col-md-6">
+
+<div class="card border-0 bg-primary-subtle h-100">
+
+<div class="card-body">
+
+
+<h6 class="fw-bold">
+
+<i class="bi bi-globe2 text-primary me-2"></i>
+
+Country
+
+</h6>
+
+
+<p class="text-muted mb-0">
+
+Automatically updated after selecting a destination.
+
+</p>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="card border-0 bg-warning-subtle h-100">
+
+
+<div class="card-body">
+
+
+<h6 class="fw-bold">
+
+
+<i class="bi bi-pin-map-fill text-warning me-2"></i>
+
+
+Coordinates
+
+
+</h6>
+
+
+<p class="text-muted mb-0">
+
+
+Latitude and longitude are filled automatically.
+
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="mt-4">
+
+
+<label class="form-label fw-semibold">
+
+
+<i class="bi bi-journal-richtext me-2 text-warning"></i>
+
+
+Travel Notes
+
+
+</label>
+
+
+{{ form.notes }}
+
+
+
+{% if form.notes.errors %}
+
+
+<div class="text-danger small mt-2">
+
+{{ form.notes.errors }}
+
+</div>
+
+
+{% endif %}
+
+
+
+</div>
+
+
+
+
+
+<hr class="my-4">
+
+
+
+
+
+<div class="d-flex justify-content-between flex-wrap gap-3">
+
+
+
+<a href="{% url 'destination_list' destination.trip.id %}"
+
+class="btn btn-outline-secondary action-btn">
+
+
+<i class="bi bi-arrow-left me-2"></i>
+
+
+Back
+
+
+</a>
+
+
+
+
+
+<button type="submit"
+
+class="btn btn-warning action-btn">
+
+
+<i class="bi bi-check-circle-fill me-2"></i>
+
+
+Save Changes
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<script>
+
+
+const input = document.getElementById("id_city");
+
+const suggestions = document.getElementById("suggestions");
+
+
+const stateField = document.getElementById("id_state");
+
+const countryField = document.getElementById("id_country");
+
+const latitudeField = document.getElementById("id_latitude");
+
+const longitudeField = document.getElementById("id_longitude");
+
+
+
+if(input && suggestions){
+
+
+
+let controller = null;
+
+
+
+input.addEventListener(
+"input",
+async function(){
+
+
+
+const query = this.value.trim();
+
+
+
+if(query.length < 2){
+
+
+suggestions.innerHTML = "";
+
+
+return;
+
+
+}
+
+
+
+
+
+if(controller){
+
+controller.abort();
+
+}
+
+
+
+controller = new AbortController();
+
+
+
+
+
+try{
+
+
+
+const response = await fetch(
+
+`/destinations/search/?q=${encodeURIComponent(query)}`,
+
+{
+
+signal: controller.signal
+
+}
+
+);
+
+
+
+
+
+if(!response.ok){
+
+throw new Error(
+"API request failed"
+);
+
+}
+
+
+
+
+
+const places = await response.json();
+
+
+
+suggestions.innerHTML = "";
+
+
+
+
+
+places.forEach(place => {
+
+
+
+const item = document.createElement("div");
+
+
+
+item.className =
+
+"list-group-item list-group-item-action";
+
+
+
+item.style.cursor = "pointer";
+
+
+
+
+
+item.innerHTML = `
+
+<i class="bi bi-geo-alt-fill text-warning me-2"></i>
+
+<strong>
+${place.city || place.display_name}
+</strong>
+
+<br>
+
+<small>
+${place.display_name}
+</small>
+
+`;
+
+
+
+
+
+item.onclick = function(){
+
+
+
+input.value =
+
+place.city || place.display_name;
+
+
+
+
+
+if(stateField){
+
+stateField.value =
+place.state || "";
+
+}
+
+
+
+if(countryField){
+
+countryField.value =
+place.country || "";
+
+}
+
+
+
+if(latitudeField){
+
+latitudeField.value =
+place.latitude || "";
+
+}
+
+
+
+if(longitudeField){
+
+longitudeField.value =
+place.longitude || "";
+
+}
+
+
+
+
+suggestions.innerHTML = "";
+
+
+
+console.log(
+"Selected Destination:",
+place
+);
+
+
+
+};
+
+
+
+
+
+suggestions.appendChild(item);
+
+
+
+});
+
+
+
+
+}
+
+catch(error){
+
+
+if(error.name !== "AbortError"){
+
+
+console.log(
+"Search Error:",
+error
+);
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+);
+
+
+
+
+
+document.addEventListener(
+"click",
+function(e){
+
+
+
+if(
+
+!suggestions.contains(e.target)
+
+&&
+
+e.target !== input
+
+){
+
+
+suggestions.innerHTML = "";
+
+
+}
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+</script>
+
+
+
+
+
+<style>
+
+
+.hero-card{
+
+animation:fadeUp .45s ease;
+
+}
+
+
+.edit-card{
+
+animation:fadeUp .65s ease;
+
+}
+
+
+.form-card{
+
+animation:fadeUp .85s ease;
+
+}
+
+
+.action-btn{
+
+transition:.25s;
+
+}
+
+
+
+.action-btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 12px 24px rgba(0,0,0,.12);
+
+
+}
+
+
+
+.dark-mode .card-header{
+
+background:#0f172a!important;
+
+border-color:#334155!important;
+
+color:#fff;
+
+}
+
+
+
+.dark-mode .bg-primary-subtle{
+
+background:rgba(37,99,235,.16)!important;
+
+}
+
+
+
+.dark-mode .bg-warning-subtle{
+
+background:rgba(245,158,11,.16)!important;
+
+}
+
+
+
+.dark-mode .text-muted{
+
+color:#cbd5e1!important;
+
+}
+
+
+
+@keyframes fadeUp{
+
+
+from{
+
+opacity:0;
+
+transform:translateY(24px);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+
+}
+
+
+
+@media(max-width:768px){
+
+
+.action-btn{
+
+width:100%;
+
+}
+
+
+}
+
+
+
+</style>
+
+
+
+{% endblock %}
+

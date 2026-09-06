@@ -1,0 +1,561 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Destination{% endblock %}
+
+{% block content %}
+
+<style>
+
+.delete-hero{
+
+background:linear-gradient(135deg,#dc2626,#b91c1c);
+color:#fff;
+
+border:0;
+border-radius:28px;
+overflow:hidden;
+
+}
+
+.delete-hero .text-muted{
+
+color:rgba(255,255,255,.9)!important;
+
+}
+
+.hero-icon{
+
+font-size:110px;
+opacity:.9;
+
+}
+
+.delete-card{
+
+border:0;
+border-radius:24px;
+overflow:hidden;
+
+}
+
+.warning-card{
+
+border:0;
+border-radius:20px;
+
+background:#fff7ed;
+
+border-left:6px solid #f59e0b;
+
+transition:.3s;
+
+}
+
+.warning-card:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 18px 35px rgba(0,0,0,.08);
+
+}
+
+.info-box{
+
+background:#fff;
+border-radius:16px;
+
+padding:18px;
+
+margin-bottom:15px;
+
+}
+
+.info-icon{
+
+width:50px;
+height:50px;
+
+border-radius:50%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:22px;
+
+}
+
+.action-btn{
+
+border-radius:50px;
+padding:13px 30px;
+
+}
+
+.dark-mode .delete-card{
+
+background:#0f172a;
+border:1px solid #334155;
+
+}
+
+.dark-mode .warning-card{
+
+background:#1e293b;
+border-left-color:#f59e0b;
+
+}
+
+.dark-mode .info-box{
+
+background:#334155;
+color:#fff;
+
+}
+
+.dark-mode .text-muted{
+
+color:#cbd5e1!important;
+
+}
+
+@media(max-width:768px){
+
+.delete-hero .card-body{
+
+padding:2rem!important;
+
+}
+
+.hero-icon{
+
+font-size:70px;
+
+}
+
+}
+
+</style>
+
+<div class="container-fluid py-4">
+
+<!-- Hero -->
+
+<div class="card delete-hero shadow-lg mb-5">
+
+<div class="card-body p-5">
+
+<div class="row align-items-center">
+
+<div class="col-lg-8">
+
+<span class="badge bg-light text-danger px-3 py-2 mb-3">
+
+⚠ Delete Destination
+
+</span>
+
+<h1 class="fw-bold mb-3">
+
+Delete Destination
+
+</h1>
+
+<p class="text-muted mb-4">
+
+This action is permanent and cannot be undone.
+Please review the destination details carefully before deleting it.
+
+</p>
+
+</div>
+
+<div class="col-lg-4 text-center d-none d-lg-block">
+
+<i class="bi bi-trash3-fill hero-icon"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-xl-7">
+
+<div class="card delete-card shadow-lg">
+
+<div class="card-header bg-white border-0 py-4 px-4">
+
+<h3 class="fw-bold mb-1">
+
+<i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+
+Confirm Deletion
+
+</h3>
+
+<p class="text-muted mb-0">
+
+Once deleted, this destination cannot be recovered.
+
+</p>
+
+</div>
+
+<div class="card-body p-4">
+
+<form method="post">
+
+{% csrf_token %}
+
+
+
+<div class="warning-card">
+
+<div class="card-body p-4">
+
+<div class="d-flex align-items-center mb-4">
+
+<div class="info-icon bg-danger-subtle text-danger me-3">
+
+<i class="bi bi-trash3-fill"></i>
+
+</div>
+
+<div>
+
+<h4 class="fw-bold mb-1">
+
+Are you absolutely sure?
+
+</h4>
+
+<p class="text-muted mb-0">
+
+Deleting this destination will permanently remove it from your trip.
+
+</p>
+
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<strong>
+
+<i class="bi bi-geo-alt-fill text-danger me-2"></i>
+
+Destination
+
+</strong>
+
+<p class="mb-0 mt-2">
+
+{{ destination.city }}
+
+</p>
+
+</div>
+
+<div class="col-md-6">
+
+<strong>
+
+<i class="bi bi-map-fill text-primary me-2"></i>
+
+State
+
+</strong>
+
+<p class="mb-0 mt-2">
+
+{{ destination.state|default:"Not Available" }}
+
+</p>
+
+</div>
+
+<div class="col-md-6">
+
+<strong>
+
+<i class="bi bi-globe2 text-success me-2"></i>
+
+Country
+
+</strong>
+
+<p class="mb-0 mt-2">
+
+{{ destination.country|default:"Not Available" }}
+
+</p>
+
+</div>
+
+<div class="col-md-6">
+
+<strong>
+
+<i class="bi bi-airplane-fill text-warning me-2"></i>
+
+Trip
+
+</strong>
+
+<p class="mb-0 mt-2">
+
+{{ destination.trip.trip_name }}
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="alert alert-danger rounded-4 mt-4 mb-0">
+
+<div class="d-flex">
+
+<i class="bi bi-exclamation-octagon-fill fs-3 me-3"></i>
+
+<div>
+
+<h6 class="fw-bold mb-2">
+
+Permanent Action
+
+</h6>
+
+<p class="mb-0">
+
+This destination will be removed permanently from your travel plan.
+This action cannot be undone, and any itinerary references may no longer include this destination.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<hr class="my-4">
+
+<div class="d-flex justify-content-between flex-wrap gap-3">
+
+<a
+href="{% url 'destination_list' destination.trip.id %}"
+
+class="btn btn-outline-secondary action-btn">
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Cancel
+
+</a>
+
+<button
+type="submit"
+
+class="btn btn-danger action-btn">
+
+<i class="bi bi-trash3-fill me-2"></i>
+
+Delete Destination
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+.delete-hero{
+
+animation:fadeUp .45s ease;
+
+}
+
+.delete-card{
+
+animation:fadeUp .65s ease;
+
+}
+
+.warning-card{
+
+animation:fadeUp .85s ease;
+
+}
+
+.action-btn{
+
+transition:.25s;
+
+}
+
+.action-btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 12px 25px rgba(0,0,0,.15);
+
+}
+
+.info-box{
+
+transition:.3s;
+
+}
+
+.info-box:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 12px 24px rgba(0,0,0,.08);
+
+}
+
+.alert-danger{
+
+border-radius:18px;
+
+}
+
+.dark-mode .card-header{
+
+background:#0f172a!important;
+border-color:#334155!important;
+color:#fff;
+
+}
+
+.dark-mode .alert-danger{
+
+background:#3b1d1d;
+border-color:#7f1d1d;
+color:#fecaca;
+
+}
+
+.dark-mode .bg-danger-subtle{
+
+background:rgba(220,38,38,.18)!important;
+
+}
+
+.dark-mode .text-muted{
+
+color:#cbd5e1!important;
+
+}
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+transform:translateY(24px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+@media(max-width:992px){
+
+.delete-card .card-body{
+
+padding:1.75rem!important;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.delete-hero .card-body{
+
+padding:2rem!important;
+
+}
+
+.hero-icon{
+
+font-size:70px;
+
+}
+
+.delete-hero h1{
+
+font-size:1.9rem;
+
+}
+
+.card-header{
+
+padding:1.5rem!important;
+
+}
+
+.warning-card .card-body{
+
+padding:1.5rem!important;
+
+}
+
+.info-box{
+
+padding:16px;
+
+}
+
+.action-btn{
+
+width:100%;
+
+}
+
+.d-flex.justify-content-between{
+
+flex-direction:column-reverse;
+
+}
+
+}
+
+</style>
+
+{% endblock %}
+

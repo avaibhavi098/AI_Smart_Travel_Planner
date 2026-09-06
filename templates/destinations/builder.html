@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+
+{% block title %}
+Build Your Route
+{% endblock %}
+
+
+{% block content %}
+
+
+<style>
+
+.builder-card{
+
+    border:0;
+    border-radius:24px;
+    box-shadow:0 1rem 2rem rgba(0,0,0,.08);
+
+}
+
+
+.destination-card{
+
+    border-radius:20px;
+    border:1px solid #e5e7eb;
+    transition:.3s;
+
+}
+
+
+.destination-card:hover{
+
+    transform:translateY(-3px);
+    box-shadow:0 .5rem 1rem rgba(0,0,0,.08);
+
+}
+
+
+.form-control{
+
+    min-height:50px;
+    border-radius:14px;
+
+}
+
+
+.action-btn{
+
+    border-radius:50px;
+    padding:.8rem 1.5rem;
+
+}
+
+
+.remove-btn{
+
+    border-radius:50px;
+
+}
+
+
+/* DARK MODE */
+
+.dark-mode .builder-card{
+
+    background:#1e293b;
+    color:white;
+
+}
+
+
+.dark-mode .destination-card{
+
+    background:#0f172a;
+    border-color:#334155;
+
+}
+
+
+.dark-mode .form-control{
+
+    background:#111827;
+    color:white;
+    border-color:#475569;
+
+}
+
+
+</style>
+
+
+
+<div class="container py-5">
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-lg-8">
+
+
+
+<div class="card builder-card">
+
+
+<div class="card-body p-5">
+
+
+
+<div class="text-center mb-5">
+
+
+<i class="bi bi-geo-alt-fill text-primary"
+style="font-size:60px;"></i>
+
+
+<h2 class="fw-bold mt-3">
+
+Build Your Travel Route
+
+</h2>
+
+
+<p class="text-muted">
+
+Add all destinations you want to visit.
+You can add unlimited places.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<form method="POST" id="destinationForm">
+
+{% csrf_token %}
+
+
+
+<div id="destinationContainer">
+
+
+
+<div class="destination-card p-4 mb-3">
+
+
+<h5 class="fw-bold">
+
+Destination 1
+
+</h5>
+
+
+<input
+
+type="text"
+
+name="destinations[]"
+
+class="form-control"
+
+placeholder="Enter city name"
+
+required>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<button
+
+type="button"
+
+class="btn btn-outline-primary action-btn"
+
+onclick="addDestination()">
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Add Another Destination
+
+</button>
+
+
+
+
+
+<div class="text-center mt-5">
+
+
+<button
+
+type="submit"
+
+class="btn btn-success action-btn px-5">
+
+<i class="bi bi-check-circle me-2"></i>
+
+Finish Adding Destinations
+
+</button>
+
+
+</div>
+
+
+
+</form>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<script>
+
+
+let destinationCount = 1;
+
+
+
+function addDestination(){
+
+
+    destinationCount++;
+
+
+    let container =
+    document.getElementById(
+        "destinationContainer"
+    );
+
+
+
+    let card = document.createElement(
+        "div"
+    );
+
+
+    card.className =
+    "destination-card p-4 mb-3";
+
+
+
+    card.innerHTML = `
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+
+        <h5 class="fw-bold mb-0">
+
+        Destination ${destinationCount}
+
+        </h5>
+
+
+        <button
+
+        type="button"
+
+        class="btn btn-danger btn-sm remove-btn"
+
+        onclick="removeDestination(this)">
+
+        <i class="bi bi-trash"></i>
+
+        Remove
+
+        </button>
+
+
+    </div>
+
+
+    <input
+
+    type="text"
+
+    name="destinations[]"
+
+    class="form-control"
+
+    placeholder="Enter city name"
+
+    required>
+
+
+    `;
+
+
+
+    container.appendChild(card);
+
+
+}
+
+
+
+
+
+function removeDestination(button){
+
+
+    button
+    .closest(".destination-card")
+    .remove();
+
+
+}
+
+
+
+</script>
+
+
+
+{% endblock %}

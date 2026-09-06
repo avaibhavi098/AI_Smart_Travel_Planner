@@ -1,0 +1,766 @@
+{% extends "base.html" %}
+
+{% block title %}Add Destination{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    border:0;
+    border-radius:24px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#198754,#20c997);
+    color:#fff;
+}
+
+.page-header .text-muted{
+    color:rgba(255,255,255,.85)!important;
+}
+
+.form-card{
+    border:0;
+    border-radius:22px;
+    box-shadow:0 .75rem 2rem rgba(0,0,0,.08);
+}
+
+.form-control,
+.form-select,
+textarea{
+    border-radius:14px!important;
+    min-height:52px;
+    transition:.25s;
+}
+
+textarea{
+    min-height:150px!important;
+    resize:vertical;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+    border-color:#20c997;
+    box-shadow:0 0 0 .2rem rgba(32,201,151,.15);
+}
+
+.search-wrapper{
+    position:relative;
+}
+
+.search-icon{
+    position:absolute;
+    top:52px;
+    left:18px;
+    color:#198754;
+    z-index:10;
+    font-size:18px;
+}
+
+#id_city{
+    padding-left:48px;
+}
+
+#suggestions{
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid rgba(0,0,0,.08);
+    background:var(--bs-body-bg);
+}
+
+#suggestions button{
+    border:none;
+    transition:.2s;
+    padding:14px 18px;
+}
+
+#suggestions button:hover{
+    background:#f8f9fa;
+    border-left:4px solid #198754;
+    padding-left:22px;
+}
+
+.destination-item-title{
+    font-weight:600;
+}
+
+.destination-item-sub{
+    font-size:.85rem;
+    color:#6c757d;
+}
+
+.country-badge{
+    font-size:.72rem;
+}
+
+.btn-pill{
+    border-radius:50px;
+    padding:.75rem 1.5rem;
+}
+
+.counter{
+    text-align:right;
+    font-size:.85rem;
+    color:#6c757d;
+}
+
+.loading-box{
+    padding:18px;
+    text-align:center;
+    color:#6c757d;
+}
+
+.empty-result{
+    padding:20px;
+    text-align:center;
+    color:#6c757d;
+}
+
+.card-hover{
+    transition:.25s;
+}
+
+.card-hover:hover{
+    transform:translateY(-3px);
+    box-shadow:0 .75rem 1.5rem rgba(0,0,0,.08);
+}
+
+@media(max-width:768px){
+
+.header-actions{
+
+margin-top:20px;
+
+}
+
+.header-actions a,
+.header-actions button{
+
+width:100%;
+margin-bottom:10px;
+
+}
+
+}
+
+.dark-mode .card.bg-light{
+
+    background:#0f172a !important;
+    color:white;
+
+}
+
+
+.dark-mode .form-check-label{
+
+    color:white;
+
+}
+
+
+</style>
+
+<div class="container-fluid py-4">
+
+<div class="card page-header shadow mb-5">
+
+<div class="card-body p-5">
+
+<div class="row align-items-center">
+
+<div class="col-lg-8">
+
+<span class="badge bg-light text-success fw-bold mb-3">
+
+STEP 2 OF 2
+
+</span>
+
+<h2 class="fw-bold mb-3">
+
+<i class="bi bi-geo-alt-fill me-2"></i>
+
+Add Destination
+
+</h2>
+
+<p class="text-muted mb-0">
+
+Search any city worldwide and instantly add it to your trip.
+Location details are filled automatically after selection.
+
+</p>
+
+</div>
+
+<div class="col-lg-4 text-center d-none d-lg-block">
+
+<i class="bi bi-globe-central-south-asia"
+style="font-size:90px;opacity:.95;"></i>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="card form-card card-hover">
+
+<div class="card-body p-5">
+
+<form method="post">
+
+{% csrf_token %}
+
+{{ form.state }}
+{{ form.country }}
+{{ form.latitude }}
+{{ form.longitude }}
+
+{% if form.non_field_errors %}
+
+<div class="alert alert-danger rounded-4">
+
+{{ form.non_field_errors }}
+
+</div>
+
+{% endif %}
+
+<div class="mb-4 search-wrapper">
+
+<label class="form-label fw-semibold">
+
+<i class="bi bi-search me-2"></i>
+
+Search Destination
+
+</label>
+
+<div class="search-icon">
+
+<i class="bi bi-search"></i>
+
+</div>
+
+{{ form.city }}
+
+<div id="loading"
+class="loading-box d-none">
+
+<div class="spinner-border spinner-border-sm text-success me-2"></div>
+
+Searching destinations...
+
+</div>
+
+{% if form.city.errors %}
+
+<div class="text-danger small mt-2">
+
+{{ form.city.errors }}
+
+</div>
+
+{% endif %}
+
+<div
+id="suggestions"
+class="list-group position-absolute w-100 shadow mt-2"
+style="z-index:1000;max-height:320px;overflow:auto;">
+
+</div>
+
+</div>
+
+
+<div class="mb-4">
+
+<div class="form-check">
+
+{{ form.is_source }}
+
+<label class="form-check-label fw-semibold">
+
+<i class="bi bi-geo-alt-fill text-success me-2"></i>
+
+Starting Location (Source Destination)
+
+</label>
+
+</div>
+
+<small class="text-muted">
+
+Select this if this destination is your trip starting point.
+
+</small>
+
+</div>
+
+
+
+<div class="mb-4">
+
+<label class="form-label fw-semibold">
+
+<i class="bi bi-journal-text me-2"></i>
+
+Trip Notes
+
+</label>
+
+{{ form.notes }}
+
+<div class="counter">
+
+<span id="notesCount">
+
+0
+
+</span>
+
+/ 500 characters
+
+</div>
+
+</div>
+
+
+
+<hr class="my-4">
+
+<div class="card border-0 bg-light rounded-4 mb-4">
+
+<div class="card-body">
+
+<div class="row text-center">
+
+<div class="col-md-4">
+
+<div class="display-6 text-success">
+
+<i class="bi bi-search"></i>
+
+</div>
+
+<h6 class="fw-bold mt-2">
+
+Search
+
+</h6>
+
+<small class="text-muted">
+
+Find any city worldwide
+
+</small>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="display-6 text-primary">
+
+<i class="bi bi-geo-alt-fill"></i>
+
+</div>
+
+<h6 class="fw-bold mt-2">
+
+Select
+
+</h6>
+
+<small class="text-muted">
+
+Auto-fill location details
+
+</small>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="display-6 text-warning">
+
+<i class="bi bi-stars"></i>
+
+</div>
+
+<h6 class="fw-bold mt-2">
+
+Plan
+
+</h6>
+
+<small class="text-muted">
+
+Generate AI itinerary later
+
+</small>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="d-flex justify-content-between flex-wrap header-actions">
+
+<a href="{% url 'destinations:destination_list' trip.id %}"
+class="btn btn-outline-secondary btn-pill">
+
+<i class="bi bi-arrow-left me-2"></i>
+
+Back
+
+</a>
+
+<button
+type="submit"
+id="saveBtn"
+class="btn btn-success btn-pill">
+
+<span id="saveText">
+
+<i class="bi bi-plus-circle me-2"></i>
+
+Save Destination
+
+</span>
+
+<span
+id="saveSpinner"
+class="d-none">
+
+<span
+class="spinner-border spinner-border-sm me-2"></span>
+
+Saving...
+
+</span>
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const input=document.getElementById("id_city");
+const suggestions=document.getElementById("suggestions");
+const loading=document.getElementById("loading");
+
+const stateField=document.getElementById("id_state");
+const countryField=document.getElementById("id_country");
+const latitudeField=document.getElementById("id_latitude");
+const longitudeField=document.getElementById("id_longitude");
+
+const notes=document.getElementById("id_notes");
+const counter=document.getElementById("notesCount");
+
+if(notes){
+
+const updateCounter=()=>{
+
+counter.textContent=notes.value.length;
+
+};
+
+updateCounter();
+
+notes.addEventListener("input",updateCounter);
+
+}
+
+let currentIndex = -1;
+let currentResults = [];
+
+let debounceTimer = null;
+let controller = null;
+
+input.addEventListener("input", function () {
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(searchPlaces, 300);
+
+});
+
+async function searchPlaces() {
+
+    const query = input.value.trim();
+
+    currentIndex = -1;
+
+    if (query.length < 2) {
+
+        suggestions.innerHTML = "";
+
+        loading.classList.add("d-none");
+
+        return;
+
+    }
+
+    if (controller) {
+
+        controller.abort();
+
+    }
+
+    controller = new AbortController();
+
+    loading.classList.remove("d-none");
+
+    try {
+
+        const response = await fetch(
+
+            `/destinations/search/?q=${encodeURIComponent(query)}`,
+
+            {
+                signal: controller.signal
+            }
+
+        );
+
+        currentResults = await response.json();
+
+    } catch (error) {
+
+        if (error.name === "AbortError") {
+
+            return;
+
+        }
+
+        console.error(error);
+
+        loading.classList.add("d-none");
+
+        return;
+
+    }
+
+    loading.classList.add("d-none");
+
+    suggestions.innerHTML = "";
+
+    if (currentResults.length === 0) {
+
+        suggestions.innerHTML = `
+
+        <div class="empty-result">
+
+            <div class="display-6 mb-2">
+
+                <i class="bi bi-search"></i>
+
+            </div>
+
+            <strong>No destinations found</strong>
+
+            <div class="small mt-1">
+
+                Try another city.
+
+            </div>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+    currentResults.forEach(place => {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+
+        button.className = "list-group-item list-group-item-action";
+
+        button.innerHTML = `
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <div class="destination-item-title">
+
+                    <i class="bi bi-geo-alt-fill text-success me-2"></i>
+
+                    ${place.city || place.display_name}
+
+                </div>
+
+                <div class="destination-item-sub">
+
+                    ${place.state || ""}
+
+                </div>
+
+            </div>
+
+            <span class="badge bg-success country-badge">
+
+                ${place.country || ""}
+
+            </span>
+
+        </div>
+
+        `;
+
+        button.onclick = () => selectPlace(place);
+
+        suggestions.appendChild(button);
+
+    });
+
+}
+
+
+function selectPlace(place){
+
+input.value=place.city || place.display_name;
+
+stateField.value=place.state || "";
+
+countryField.value=place.country || "";
+
+latitudeField.value=place.latitude || "";
+
+longitudeField.value=place.longitude || "";
+
+suggestions.innerHTML="";
+
+if(window.Swal){
+
+Swal.fire({
+
+toast:true,
+
+position:"top-end",
+
+icon:"success",
+
+title:"Destination Selected",
+
+showConfirmButton:false,
+
+timer:1800
+
+});
+
+}
+
+}
+
+input.addEventListener("keydown",function(e){
+
+const items=suggestions.querySelectorAll("button");
+
+if(!items.length) return;
+
+if(e.key==="ArrowDown"){
+
+e.preventDefault();
+
+currentIndex=(currentIndex+1)%items.length;
+
+}
+
+else if(e.key==="ArrowUp"){
+
+e.preventDefault();
+
+currentIndex=(currentIndex-1+items.length)%items.length;
+
+}
+
+else if(e.key==="Enter"){
+
+if(currentIndex>=0){
+
+e.preventDefault();
+
+items[currentIndex].click();
+
+}
+
+return;
+
+}
+
+items.forEach(item=>item.classList.remove("active"));
+
+if(currentIndex>=0){
+
+items[currentIndex].classList.add("active");
+
+items[currentIndex].scrollIntoView({
+
+block:"nearest"
+
+});
+
+}
+
+});
+
+document.addEventListener("click",function(e){
+
+if(!suggestions.contains(e.target) && e.target!==input){
+
+suggestions.innerHTML="";
+
+}
+
+});
+
+const form=document.querySelector("form");
+
+const saveBtn=document.getElementById("saveBtn");
+
+const saveText=document.getElementById("saveText");
+
+const saveSpinner=document.getElementById("saveSpinner");
+
+form.addEventListener("submit",function(){
+
+saveBtn.disabled=true;
+
+saveText.classList.add("d-none");
+
+saveSpinner.classList.remove("d-none");
+
+});
+
+</script>
+
+{% endblock %}
+
